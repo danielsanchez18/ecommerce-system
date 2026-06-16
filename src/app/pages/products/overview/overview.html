@@ -1,0 +1,32 @@
+<main class="w-full px-4 md:px-7 xl:px-10 flex flex-col gap-7">
+
+    <div class="flex items-center gap-x-2">
+        <div>
+            <h1 class="text-lg font-medium">Productos (0)</h1>
+            <p class="text-sm text-gray-700">Panel de control de productos</p>
+        </div>
+
+        <button class="ml-auto text-sm btn-primary border-none!" aria-haspopup="dialog" aria-expanded="false"
+            aria-controls="hs-add-product-modal" data-hs-overlay="#hs-add-product-modal">
+            Agregar
+            <span class="max-sm:hidden"> producto</span>
+        </button>
+    </div>
+
+    <component-products-list (editClick)="onEditProduct($event)" />
+
+</main>
+
+<!-- Modal de agregar producto -->
+<div id="hs-add-product-modal"
+    class="hs-overlay hidden size-full fixed top-0 inset-s-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
+    role="dialog" tabindex="-1" aria-labelledby="hs-add-product-modal-label">
+    <component-products-add />
+</div>
+
+<!-- Modal de editar producto -->
+<div id="hs-edit-product-modal"
+    class="hs-overlay hidden size-full fixed top-0 inset-s-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
+    role="dialog" tabindex="-1" aria-labelledby="hs-edit-product-modal-label">
+    <component-products-edit [product]="selectedProduct" />
+</div>

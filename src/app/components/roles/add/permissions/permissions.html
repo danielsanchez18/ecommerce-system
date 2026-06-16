@@ -1,0 +1,40 @@
+<section class="border border-gray-300 rounded-xl overflow-hidden">
+
+    <div class="px-5 py-3 border-b border-gray-300 text-sm font-medium flex justify-between items-center">
+        <p>Asignar Permisos</p>
+    </div>
+
+    <div class="px-5 py-5 flex flex-col gap-y-1">
+
+        @if (isLoading()) {
+        <p class="text-sm text-gray-500">Cargando permisos...</p>
+        } @else {
+        @for (permission of permissions(); track permission.id) {
+        <div class="px-4 py-3 bg-gray-100/70 hover:bg-gray-100 rounded-lg"
+            [ngClass]="{'border border-red-500': permissionsControl.invalid && permissionsControl.touched}">
+            <label class="cursor-pointer flex items-center gap-x-2">
+
+                <span>
+                    @switch (permission.code) {
+                    @case ('USERS') { <svg class="size-4 text-gray-500" lucideUsers /> }
+                    @case ('ROLES') { <svg class="size-4 text-gray-500" lucideUserCog /> }
+                    @case ('PRODUCTS') { <svg class="size-4 text-gray-500" lucideBox /> }
+                    @case ('SETTINGS') { <svg class="size-4 text-gray-500" lucideSettings /> }
+                    @default { <svg class="size-4 text-gray-500" lucideShield /> }
+                    }
+                </span>
+                <span class="font-medium text-sm">{{ permission.description || permission.code }}</span>
+
+                <input type="checkbox" [checked]="isChecked(permission.id)" (change)="togglePermission(permission.id)"
+                    class="ml-auto w-5 h-5 rounded-full focus:ring-primary focus:border-primary checked:bg-primary" />
+            </label>
+        </div>
+        }
+        @if (permissionsControl.invalid && permissionsControl.touched) {
+        <span class="text-xs text-red-500 mt-2">Debe seleccionar al menos un permiso.</span>
+        }
+        }
+
+    </div>
+
+</section>

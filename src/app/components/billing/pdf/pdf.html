@@ -1,0 +1,91 @@
+<div *ngIf="isOpen && invoice"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 overflow-y-auto">
+
+    <!-- Modal Container -->
+    <div
+        class="relative bg-white rounded-2xl w-full max-w-[350px] shadow-2xl animate-in zoom-in-95 duration-200 my-auto">
+
+        <!-- Header Controls -->
+        <div class="absolute -top-12 left-0 right-0 flex justify-between items-center text-white mb-2">
+            <span class="font-medium">Vista Previa Comprobante</span>
+            <div class="flex gap-2">
+                <button (click)="printReceipt()" class="p-2 hover:bg-white/20 rounded-full transition-colors"
+                    title="Imprimir">
+                    <svg lucidePrinter class="size-5" />
+                </button>
+                <button (click)="closeModal()" class="p-2 hover:bg-white/20 rounded-full transition-colors"
+                    title="Cerrar">
+                    <svg lucideX class="size-5" />
+                </button>
+            </div>
+        </div>
+
+        <!-- Printable Content -->
+        <div id="invoice-content"
+            class="bg-white text-black p-6 font-mono text-sm leading-tight h-full max-h-[80vh] overflow-y-auto">
+
+            <!-- Header (Restaurante Info) -->
+            <div class="text-center mb-6 space-y-1">
+                <h1 class="text-xl font-bold uppercase tracking-wider">LAS ROCAS RESTAURANTE</h1>
+                <p class="text-xs">RUC: 20123456789</p>
+                <p class="text-xs">Miguel Grau 872, Monsefú 14831</p>
+                <p class="text-xs">Cel: 971178640</p>
+            </div>
+
+            <!-- Receipt Info -->
+            <div class="text-center border-y border-dashed border-gray-400 py-3 mb-4 space-y-1">
+                <h2 class="text-lg font-bold uppercase">{{ invoice.type === 'FACTURA' ? 'Factura Electrónica' : 'Boleta
+                    de Venta Electrónica' }}</h2>
+                <p class="text-sm font-semibold">{{ invoice.series }}-{{ invoice.number | number:'6.0-0' }}</p>
+            </div>
+
+            <!-- Meta Info -->
+            <div class="text-xs mb-4 space-y-1">
+                <div class="flex justify-between">
+                    <span>Fecha:</span>
+                    <span>{{ invoice.issueDate | date:'dd/MM/yyyy HH:mm' }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Pedido Ref:</span>
+                    <span>{{ invoice.orderId | slice:0:8 }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Cliente:</span>
+                    <span class="text-right truncate max-w-[150px]">{{ invoice.customerName }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>{{ invoice.customerDocumentType }}:</span>
+                    <span>{{ invoice.customerDocumentNumber || 'S/N' }}</span>
+                </div>
+            </div>
+
+            <!-- Items Placeholder (Since invoice doesn't have items mapped yet, we just show total) -->
+            <div class="mb-4 text-xs">
+                <p class="text-center italic text-gray-500 mb-2">Por consumo de alimentos y bebidas</p>
+            </div>
+
+            <!-- Totals -->
+            <div class="border-t border-dashed border-gray-400 pt-3 space-y-1 text-xs">
+                <div class="flex justify-between">
+                    <span>OP. GRAVADA:</span>
+                    <span>{{ invoice.subtotal | currency:'S/. ' }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>IGV (18%):</span>
+                    <span>{{ invoice.igvAmount | currency:'S/. ' }}</span>
+                </div>
+                <div class="flex justify-between font-bold text-sm mt-2 pt-2 border-t border-gray-300">
+                    <span>TOTAL:</span>
+                    <span>{{ invoice.totalAmount | currency:'S/. ' }}</span>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-8 text-center text-xs space-y-2">
+                <p>Representación impresa del comprobante electrónico.</p>
+                <p>¡Gracias por tu compra!</p>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="flex flex-col gap-y-5 w-64 border-r pb-10 border-gray-200 h-full">
+
+    <div class="pt-3 pb-2 pl-10 pr-5">
+        <a href="/dashboard" class="h-10 flex items-center gap-x-3">
+            <img src="/logos/logo.png" alt="Logo Las Rocas" class="h-full object-cover">
+        </a>
+    </div>
+
+    <div class="flex flex-col px-5 gap-y-1 h-full overflow-y-auto">
+
+        <a class="px-5 py-2.5 text-sm max-sm:rounded-lg text-gray-800 sm:border-l-[3px] border-transparent hover:bg-gray-100 flex items-center gap-x-3 sm:gap-x-2.5"
+            routerLink="/dashboard" routerLinkActive="text-primary max-sm:bg-gray-100 border-l-primary"
+            [routerLinkActiveOptions]="{exact: true}">
+            <svg lucideLayoutDashboard class="size-4" />
+            Overview
+        </a>
+
+        @for (route of routes; track $index) {
+
+        <a class="px-5 py-2.5 max-sm:rounded-lg text-sm text-gray-800 sm:border-l-[3px] border-transparent hover:bg-gray-100 flex items-center gap-x-3 sm:gap-x-2.5"
+            routerLink="{{route.path}}" routerLinkActive="text-primary max-sm:bg-gray-100 border-l-primary">
+            <svg [lucideIcon]="route.icon" class="size-4" />
+            {{route.name}}
+        </a>
+
+        }
+    </div>
+
+</div>

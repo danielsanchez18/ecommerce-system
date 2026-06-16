@@ -1,0 +1,22 @@
+<main class="w-full px-4 md:px-7 xl:px-10">
+
+    <form [formGroup]="roleForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-y-7">
+
+        <div class="flex items-center justify-between gap-x-2">
+            <div>
+                <a href="/dashboard/roles" class="text-sm text-primary font-medium hover:underline">Regresar</a>
+                <h1 class="text-lg font-medium">Agregar Rol</h1>
+            </div>
+
+            <button type="submit" class="btn-primary text-sm" [disabled]="isSubmitting">
+                {{ isSubmitting ? 'Registrando...' : 'Registrar Rol' }}
+            </button>
+        </div>
+
+        <div class="grid xl:grid-cols-2 gap-5">
+            <component-roles-add-info [infoForm]="roleForm.get('info')" />
+            <component-roles-add-permissions [permissionsControl]="roleForm.get('permissions')" />
+        </div>
+    </form>
+
+</main>

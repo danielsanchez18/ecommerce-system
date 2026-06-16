@@ -1,0 +1,113 @@
+<!-- Tables -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5" cdkDropListGroup>
+
+    <!-- Normal Tables Loop -->
+    @for (table of tables; track table.id) {
+    <!-- Contenedor DropList por cada tabla normal para recibir otras tablas -->
+    <div cdkDropList [cdkDropListData]="table" (cdkDropListDropped)="onDrop($event)" class="w-full h-full min-h-50">
+
+        @if (table.status === 'AVAILABLE') {
+        <!-- Tables Item -->
+        <button cdkDrag [cdkDragData]="table" (click)="selectTableForOrder(table)"
+            class="w-full h-full min-h-50 min-w-50 border-2 border-dashed border-gray-300 rounded-lg space-y-5 hover:bg-gray-100/60 transition-colors cursor-pointer bg-white relative z-10">
+
+            <!-- Placeholder custom para CDK Drag -->
+            <div *cdkDragPlaceholder
+                class="w-full h-full min-h-50 min-w-50 border-2 border-dashed border-primary bg-primary/10 rounded-lg">
+            </div>
+
+            <div class="space-y-0">
+                <p class="text-sm font-medium uppercase">Mesa {{ table.tableNumber }}</p>
+                <p class="text-sm text-gray-700">Disponible</p>
+            </div>
+
+            <div class="text-gray-600 w-fit mx-auto flex items-center gap-x-2">
+                <svg lucideUsers class="size-4" />
+                <p class="text-sm">0 / {{ table.capacity }} personas</p>
+            </div>
+
+        </button>
+        } @else if (table.status === 'OCCUPIED' || table.status === 'RESERVED') {
+        <!-- Mesa Item Occupied/Reserved -->
+        <button cdkDrag [cdkDragData]="table" [cdkDragDisabled]="true"
+            class="w-full h-full min-h-50 min-w-50 border-2 border-dashed border-primary rounded-lg space-y-5 hover:bg-gray-100/60 transition-colors bg-white relative z-10">
+            <div class="space-y-0">
+                <p class="text-sm font-medium uppercase">Mesa {{ table.tableNumber }}</p>
+                <p class="text-sm text-gray-700">{{ table.status === 'OCCUPIED' ? 'Ocupada' : 'Reservada' }}</p>
+            </div>
+
+            <div class="text-gray-600 w-fit mx-auto flex items-center gap-x-2">
+                <svg lucideUsers class="size-4" />
+                <p class="text-sm">Hasta {{ table.capacity }} personas</p>
+            </div>
+
+            <button class="btn-secondary text-xs w-fit mx-auto mt-2 pointer-events-auto" (click)="viewAccount(table, $event)">Ver cuenta</button>
+        </button>
+        } @else {
+        <!-- Mesa Item Other Statuses (Maintenance, etc) -->
+        <button cdkDrag [cdkDragData]="table" [cdkDragDisabled]="true"
+            class="w-full h-full min-h-50 min-w-50 border-2 border-dashed border-red-300 rounded-lg space-y-5 hover:bg-red-50/60 transition-colors opacity-70 bg-white relative z-10">
+            <div class="space-y-0">
+                <p class="text-sm font-medium uppercase">Mesa {{ table.tableNumber }}</p>
+                <p class="text-sm text-red-700">Mantenimiento</p>
+            </div>
+
+            <div class="text-gray-600 w-fit mx-auto flex items-center gap-x-2">
+                <svg lucideUsers class="size-4" />
+                <p class="text-sm">{{ table.capacity }} personas</p>
+            </div>
+        </button>
+        }
+
+    </div>
+    }
+
+    <!-- Merged Tables Loop -->
+    @for (group of mergedGroups; track $index) {
+    <!-- Table Merged (Las mesas unidas ahora pueden recibir otras mesas para juntar más) -->
+    <!-- Se usa [style.grid-column] dinámico para ocupar columnas según la cantidad de mesas unidas, o flex-wrap -->
+    <div cdkDropList [cdkDropListData]="group[0]" (cdkDropListDropped)="onDrop($event)"
+        class="flex gap-2 min-h-50 rounded-lg p-2 bg-gray-50 border border-gray-200"
+        [style.grid-column]="'span ' + group.length" (click)="selectMergedGroupForOrder(group)">
+
+        @for (table of group; track table.id) {
+        <!-- Mesa Item -->
+        <div
+            class="flex flex-col flex-1 items-center justify-center min-w-40 h-full border-2 border-dashed border-primary rounded-lg space-y-5 hover:bg-gray-100/60 transition-colors bg-white cursor-pointer relative">
+            <div class="space-y-0 text-center">
+                <p class="text-sm font-medium uppercase">Mesa {{ table.tableNumber }}</p>
+                <p class="text-sm text-gray-700">Unida</p>
+            </div>
+
+            <div class="text-gray-600 w-fit mx-auto flex items-center gap-x-2">
+                <svg lucideUsers class="size-4" />
+                <p class="text-sm">{{ table.capacity }} personas</p>
+            </div>
+
+            <button class="btn-secondary text-sm z-20 pointer-events-auto" (click)="separateTable(table, $event)">
+                Separar
+            </button>
+        </div>
+        }
+    </div>
+    }
+
+    <!-- Add Table -->
+    <button class="w-full min-w-50 h-50 min-h-50 border-2 border-dashed border-gray-300 rounded-lg space-y-5
+     hover:bg-gray-100/60 transition-colors bg-white" aria-haspopup="dialog" aria-expanded="false"
+        aria-controls="hs-add-table-modal" data-hs-overlay="#hs-add-table-modal">
+
+        <div class="space-y-0 text-gray-500 hover:text-black">
+            <svg lucidePlus class="size-6 mx-auto mb-2" />
+            <p class="text-sm font-medium ">Nueva Mesa</p>
+        </div>
+
+    </button>
+</div>
+
+<!-- Modal de agregar mesa -->
+<div id="hs-add-table-modal"
+    class="hs-overlay hidden size-full fixed top-0 inset-s-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
+    role="dialog" tabindex="-1" aria-labelledby="hs-add-table-modal-label">
+    <component-restaurant-add-table (tableCreated)="loadTables()" />
+</div>

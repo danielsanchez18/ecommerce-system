@@ -1,0 +1,175 @@
+<div
+    class="hs-overlay-animation-target hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95 opacity-0 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-56px)] flex items-center">
+    <div
+        class="w-full flex flex-col bg-white border border-gray-300 shadow-2xs rounded-xl pointer-events-auto overflow-hidden">
+
+        <div class="flex justify-between items-center  border-b border-gray-300 px-6 py-4">
+            <div>
+                <h3 class="text-base font-medium">Registrar Descuento</h3>
+                <p class="text-xs text-gray-700 mt-0.5">Completa la información para registrar un descuento en el
+                    sistema
+                </p>
+            </div>
+            <button type="button" (click)="resetForm()"
+                class="size-8 inline-flex justify-center items-center gap-x-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-300 disabled:opacity-50 disabled:pointer-events-none"
+                aria-label="Close" data-hs-overlay="#hs-add-discount-modal">
+                <svg lucideX class="size-4" />
+            </button>
+        </div>
+
+        <!-- Form Content -->
+        <form (ngSubmit)="onSubmit()" class="flex-1 overflow-y-auto p-6 space-y-5 max-h-[70vh]">
+
+            <!-- Select Products -->
+            <div class="space-y-2 relative">
+                <label class="block text-xs tracking-wider uppercase font-semibold">
+                    Producto
+                    <span class="text-red-500">*</span>
+                </label>
+                <input type="text" name="product" [(ngModel)]="searchText" (input)="filterProducts()"
+                    (focus)="showSuggestions = true" placeholder="Ingrese el nombre del producto"
+                    class="border rounded-lg border-gray-300 text-sm w-full py-2 px-4 focus:outline-none focus:ring-[1.5px] focus:ring-primary"
+                    #productInput>
+
+                <!-- Lista de sugerencias -->
+                <ul *ngIf="showSuggestions && filteredProducts.length > 0"
+                    class="absolute z-10 bg-white border border-gray-300 animate-fade-in w-full mt-1 rounded-lg shadow p-1 max-h-60 overflow-y-auto"
+                    #suggestionList>
+
+                    <li *ngFor="let product of filteredProducts.slice(0, 5)"
+                        class="grid grid-cols-[auto_1fr] items-center gap-x-2 px-4 py-2 text-xs rounded-md hover:bg-gray-100 cursor-pointer"
+                        (click)="selectProduct(product)">
+
+                        <div
+                            class="size-10 rounded-md row-span-2 contain-content bg-gray-200 border border-gray-100 flex items-center justify-center">
+                            <img *ngIf="product.imageUrl" [src]="product.imageUrl" alt="{{ product.name }}"
+                                class="h-full w-full object-cover">
+                        </div>
+                        <p class="text-[13px] font-medium">{{ product.name }}</p>
+                        <p class="text-gray-700">Precio: {{ product.basePrice | currency:'S/. ' }}</p>
+
+                    </li>
+                </ul>
+
+                <p class="text-gray-700 text-xs" *ngIf="selectedProduct">
+                    Precio Original: {{ selectedProduct.basePrice | currency:'S/. ' }}
+                </p>
+            </div>
+
+
+            <!-- Select Discount Type -->
+            <div class="flex flex-col gap-y-2">
+                <label class="text-xs tracking-wider uppercase font-semibold">
+                    Tipo de descuento
+                    <span class="text-red-500">*</span>
+                </label>
+                <!-- Select -->
+                <select
+                    class="py-2 ps-4 pe-9 bg-white w-full border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                    [(ngModel)]="discountType" name="discountType" id="discountType" (change)="calculateFinalPrice()">
+                    <option value="descFijo">Descuento Fijo (S/.)</option>
+                    <option value="descPorcentaje">Porcentaje (%)</option>
+                </select>
+                <!-- End Select -->
+
+                @if (discountType == 'descFijo') {
+                <p class="text-xs text-gray-700">El descuento se aplicará como un monto fijo.</p>
+                }
+                @if (discountType == 'descPorcentaje') {
+                <p class="text-xs text-gray-700">El descuento se aplicará como un porcentaje del precio original.</p>
+                }
+            </div>
+
+
+            <!-- Descuento Fijo -->
+            @if (discountType == 'descFijo') {
+
+            <div class="flex flex-col gap-y-2 md:col-span-2">
+                <label class="text-xs tracking-wider uppercase font-semibold">
+                    Monto de Descuento
+                    <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                    <input name="discount" type="number" [(ngModel)]="discountAmount" (input)="calculateFinalPrice()"
+                        placeholder="Ingrese el monto de Descuento"
+                        class="border rounded-lg border-gray-300 text-sm w-full py-2 pl-10 px-4 focus:outline-primary">
+                    <span class="text-sm text-gray-700 absolute top-1/2 left-4 leading-none -translate-y-1/2">S/.
+                    </span>
+                </div>
+                <p class="text-xs text-gray-700">Ingresa el monto de descuento en soles.</p>
+            </div>
+
+            }
+
+            <!-- Porcentaje de Descuento -->
+            @if (discountType == 'descPorcentaje') {
+
+            <div class="space-y-2 md:col-span-2">
+                <label for="discount" class="block text-xs uppercase font-medium">Porcentaje de Descuento</label>
+                <div class="relative">
+                    <input name="discount" type="number" [(ngModel)]="discountAmount" (input)="calculateFinalPrice()"
+                        placeholder="Ingrese el porcentaje de Descuento"
+                        class="border rounded-lg border-gray-300 text-sm w-full py-2 pl-10 px-4 focus:outline-primary">
+                    <span class="text-sm text-gray-700 absolute top-1/2 left-4 leading-none -translate-y-1/2">% </span>
+                </div>
+                <p class="text-xs text-gray-700">Ingresa el porcentaje de descuento (ej. 20 para 20%).</p>
+            </div>
+            }
+
+            <!-- Precio Final Calculado -->
+            @if (selectedProduct && discountAmount > 0) {
+            <div class="bg-primary/5 border border-primary/20 rounded-lg p-3 text-sm flex items-center justify-between">
+                <span class="text-gray-700">Precio Final con Descuento:</span>
+                <span class="font-bold text-primary">{{ finalPrice | currency:'S/. ' }}</span>
+            </div>
+            }
+
+            <div class="grid sm:grid-cols-2 gap-5">
+                <!-- Fecha de Inicio -->
+                <div class="flex flex-col gap-y-2">
+                    <label class="text-xs tracking-wider uppercase font-semibold">
+                        Fecha de Inicio
+                        <span class="text-red-500">*</span>
+                    </label>
+                    <input type="datetime-local" name="startDate" [(ngModel)]="startDate" required
+                        class="w-full text-sm border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-[1.5px] focus:ring-primary">
+                </div>
+
+                <!-- Fecha de Fin -->
+                <div class="flex flex-col gap-y-2">
+                    <label class="text-xs tracking-wider uppercase font-semibold">
+                        Fecha de Fin
+                        <span class="text-red-500">*</span>
+                    </label>
+                    <input type="datetime-local" name="endDate" [(ngModel)]="endDate" required
+                        class="w-full text-sm border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-[1.5px] focus:ring-primary">
+                </div>
+            </div>
+
+            <!-- Usos máximos -->
+            <div class="flex flex-col gap-y-2">
+                <label class="text-xs tracking-wider uppercase font-semibold">
+                    Usos máximos
+                    <span class="text-red-500">*</span>
+                </label>
+                <input type="number" placeholder="Ingrese el número de usos máximos" name="maxUses"
+                    [(ngModel)]="maxUses" required
+                    class="w-full text-sm border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-[1.5px] focus:ring-primary">
+                <p class="text-xs text-gray-700">Límite de veces que se puede usar la oferta (0 = ilimitado).</p>
+            </div>
+        </form>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 border-t border-gray-300 bg-gray-50 flex items-center justify-end gap-x-3">
+            <button type="button" (click)="resetForm()" data-hs-overlay="#hs-add-discount-modal"
+                class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 hover:text-black focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors disabled:opacity-50 cursor-pointer">
+                Cancelar
+            </button>
+            <button type="button" (click)="onSubmit()"
+                class="px-4 py-2 bg-primary hover:bg-primary-hover text-white rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors flex items-center gap-x-2 disabled:opacity-60 cursor-pointer">
+                <span>Guardar Descuento</span>
+            </button>
+        </div>
+
+    </div>
+</div>

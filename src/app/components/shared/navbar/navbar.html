@@ -1,0 +1,92 @@
+<nav class="flex py-2 border-b border-gray-200 px-4 md:px-7 lg:px-10">
+
+    <a href="/dashboard" class="h-10 flex items-center gap-x-3 lg:hidden">
+        <img src="/logos/logo.png" alt="Logo Las Rocas" class="h-full object-cover">
+    </a>
+
+    <!-- Search Box -->
+    <div class="relative hidden lg:block">
+        <svg lucideSearch class="size-4 absolute left-3.5 top-2.5 text-gray-500" />
+        <input type="text"
+            class="pl-10 text-sm py-2 border border-gray-300 rounded-lg w-xs focus:outline-none focus:ring-1.5 focus:ring-offset-0 focus:ring-primary"
+            placeholder="Buscar" />
+    </div>
+
+    <div class="flex items-center ml-auto gap-x-1">
+
+        <!-- Soporte -->
+        <button class="flex items-center justify-center gap-x-1 size-8 rounded-full hover:bg-gray-100">
+            <svg lucideCircleQuestionMark class="size-4.5 text-gray-800" />
+        </button>
+
+        <!-- Notificaciones -->
+        <div class="relative">
+            <button (click)="toggleDropdown()"
+                class="flex items-center justify-center gap-x-1 size-8 rounded-full hover:bg-gray-100 relative">
+                <svg lucideBell class="size-4.5 text-gray-800" />
+                <span *ngIf="unreadCount > 0"
+                    class="absolute top-0 right-0 size-2.5 bg-red-500 rounded-full border border-white"></span>
+            </button>
+
+            <!-- Dropdown -->
+            <div *ngIf="showDropdown"
+                class="absolute right-0 mt-2 w-100 bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden z-50">
+                <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+                    <h3 class="text-sm font-medium">Notificaciones</h3>
+                    <button *ngIf="unreadCount > 0" (click)="markAllAsRead($event)"
+                        class="text-xs text-primary font-medium hover:text-primary/80 flex items-center gap-x-1">
+                        <svg lucideCheckCheck class="size-3.5" />
+                        Marcar leídas
+                    </button>
+                </div>
+
+                <div class="max-h-80 overflow-y-auto">
+                    <div *ngIf="notifications.length === 0" class="px-4 py-8 text-center text-sm text-gray-500">
+                        No tienes notificaciones
+                    </div>
+
+                    <div *ngFor="let n of notifications" (click)="markAsRead(n)"
+                        class="px-4 py-3 border-b border-gray-50 hover:bg-gray-50 cursor-pointer flex gap-x-3 transition-colors"
+                        [ngClass]="{'bg-blue-50/30': !n.isRead}">
+
+                        <div class="shrink-0 mt-0.5 size-8 rounded-full flex items-center justify-center"
+                            [ngClass]="getColor(n.type)">
+                            <svg [lucideIcon]="getIcon(n.type)" class="size-4" />
+                        </div>
+
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm" [ngClass]="{'font-medium': !n.isRead}">
+                                {{ n.title }}
+                            </p>
+                            <p class="text-xs text-gray-700 mt-0.5 line-clamp-2">
+                                {{ n.message }}
+                            </p>
+                            <p class="text-xs text-gray-700 mt-1">
+                                {{ n.createdAt | date:'short' }}
+                            </p>
+                        </div>
+                        <div *ngIf="!n.isRead" class="size-2 rounded-full bg-primary mt-2"></div>
+                    </div>
+                </div>
+
+                <div class="px-4 py-2 border-t border-gray-100 text-center bg-gray-50/50">
+                    <a href="/dashboard" class="text-[13px] hover:underline font-medium">
+                        Ver todas
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Perfil -->
+        <div class="ml-2 pl-4 h-8 flex items-center border-l border-gray-200">
+            <a href="/dashboard/perfil"
+                class="h-10 w-10 bg-gray-300 rounded-full overflow-hidden flex items-center justify-center">
+                <img src="https://avatars.githubusercontent.com/u/148911330?v=4" alt="User Avatar"
+                    class="h-full w-full object-cover" />
+
+            </a>
+        </div>
+
+    </div>
+
+</nav>

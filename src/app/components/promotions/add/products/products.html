@@ -1,0 +1,66 @@
+<section class="w-full h-full border border-gray-300 rounded-xl bg-white">
+
+    <div class="px-4 py-2 border-b border-b-gray-300 flex gap-x-2 items-center justify-between">
+
+        <h3 class="font-medium text-sm">Productos Incluidos</h3>
+
+        <button type="button"
+            class="flex px-2 py-1.5 hover:bg-gray-50 items-center gap-x-2 rounded-lg border border-primary text-primary"
+            aria-haspopup="dialog" aria-expanded="false" aria-controls="modal-agregar-producto"
+            data-hs-overlay="#modal-agregar-producto">
+            <span class="text-xs font-semibold">Añadir producto</span>
+        </button>
+    </div>
+
+    <!-- Productos -->
+    <div class="min-h-32 py-3">
+
+        <!-- Productos Vacios -->
+        <div *ngIf="selectedProducts.length === 0"
+            class="text-gray-500 text-center flex flex-col h-32 text-sm justify-center space-y-2 items-center">
+            <svg lucidePackageSearch class="size-8 stroke-[1.5] text-gray-500" />
+            <p class="text-balance">Ingrese el nombre del producto que desee agregar</p>
+        </div>
+
+        <!-- Lista de productos seleccionados -->
+        <div *ngIf="selectedProducts.length > 0" class="divide-gray-200 divide-y px-4">
+
+            <div *ngFor="let product of selectedProducts"
+                [ngClass]="{ 'fade-leave': removingProductIds.includes(product.id) }"
+                class="flex items-center group justify-between transition-all py-3 duration-200">
+
+                <div class="flex  gap-3">
+                    <img [src]="product.image" class="size-12 object-cover rounded-lg" />
+                    <div>
+                        <a routerLink="/dashboard/productos/{{ product.id }}"
+                            class="font-medium text-sm underline-offset-4 hover:underline hover:text-primary">
+                            {{ product.name }}
+                        </a>
+                        <p class="text-sm line-clamp-1 text-gray-500">{{ product.description }}</p>
+
+                        <div class="flex items-center gap-2 mt-3">
+                            <p class="text-sm">{{ product.price | currency:'S/. ' }}</p>
+                            <input type="number" placeholder="00" [(ngModel)]="product.quantity"
+                                class="border border-gray-300 rounded-md px-2 py-1 text-sm w-12 text-center focus:outline-primary"
+                                min="1">
+                            <p class="text-sm text-gray-500">uds.</p>
+                        </div>
+                    </div>
+                </div>
+                <button (click)="removeProduct(product.id)" class="text-red-500">
+                    <svg lucideTrash2 class="size-5 stroke-[1.5]" />
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+<div id="modal-agregar-producto"
+    class="hs-overlay hidden size-full fixed top-0 inset-s-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
+    role="dialog" tabindex="-1" aria-labelledby="hs-scale-animation-modal-label">
+    <component-promotions-add-product [existingProductIds]="getExistingProductIds()"
+        (productsAdded)="onProductsAdded($event)" />
+</div>

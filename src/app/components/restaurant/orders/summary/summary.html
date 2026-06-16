@@ -1,0 +1,192 @@
+<section class="row-span-2 w-full xl:w-sm bg-white rounded-xl border border-gray-300">
+
+    <!-- Título -->
+    <div class="px-4 py-3 border-b border-gray-300">
+        <h3 class="font-medium text-sm">Resumen del pedido</h3>
+    </div>
+
+    <!-- Contenido -->
+    <div class="divide-y divide-gray-300 mx-4">
+
+        @if (orderCartService.isEditing()) {
+        <div class="py-5 flex flex-col gap-2">
+            <label class="text-sm font-medium">Estado del Pedido</label>
+            <select [(ngModel)]="editedStatus" data-hs-select='{
+            "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
+            "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-2 ps-3 pe-5 sm:ps-3.5 sm:pe-9 flex gap-x-2 text-nowrap cursor-pointer bg-white w-full border border-gray-200 rounded-lg text-start text-sm focus:outline-hidden focus:ring-2 focus:ring-primary",
+            "dropdownClasses": "z-50 w-full max-h-72 p-1 bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300",
+            "optionClasses": "py-2 px-3 w-full text-sm cursor-pointer hover:bg-gray-100 rounded-lg focus:outline-hidden focus:bg-gray-100 hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50",
+            "optionTemplate": "<div class=\"flex justify-between items-center w-full\"><span data-title></span><span class=\"hidden hs-selected:block\"><svg class=\"shrink-0 size-4 text-primary \" xmlns=\"http:.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg></span></div>",
+            "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevron-down-icon lucide-chevron-down shrink-0 size-3.5 text-gray-500\"><path d=\"m6 9 6 6 6-6\"/></svg></div>"
+            }' class="hidden">
+                <option value="PENDING">Pendiente</option>
+                <option value="PREPARING">En Proceso</option>
+                <option value="READY">Listo</option>
+                <option value="COMPLETED">Completado</option>
+                <option value="CANCELLED">Cancelado / Rechazado</option>
+            </select>
+        </div>
+        }
+
+        <div class="space-y-2 py-5">
+
+            <!-- If: Pedido en mesa -->
+            <div *ngIf="orderCartService.orderType() === 'DINE_IN'" class="flex items-center gap-x-3 text-sm">
+                <svg lucideUtensilsCrossed class="text-gray-500 size-4" />
+                <p class="text-gray-500">Mesa(s):</p>
+                <div class="flex flex-wrap gap-2">
+                    <span *ngFor="let table of orderCartService.selectedTables()"
+                        class="text-xs font-medium border border-gray-200 px-2 py-1 rounded-md uppercase">
+                        Mesa {{ table.tableNumber }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Cupón Aplicado -->
+            <div class="flex items-center gap-x-3 text-sm">
+                <svg lucideTicketPercent class="text-gray-500 size-4" />
+                <p class="text-gray-500">Cupón:</p>
+
+                @if (orderCartService.couponCode()) {
+                <span class="text-primary text-xs font-semibold border border-primary px-2 py-1 rounded-md">
+                    {{ orderCartService.couponCode() }}
+                </span>
+                } @else {
+                <span>Ninguno</span>
+                }
+
+            </div>
+
+        </div>
+
+        <!-- Entrega  -->
+        <div class="space-y-2 text-sm py-5">
+
+            <div class="flex items-center gap-x-3 justify-between">
+                <h2 class="font-medium">Entrega</h2>
+            </div>
+
+            <!-- Tipo de Pedido -->
+            <div *ngIf="orderCartService.orderType() !== 'DINE_IN'" class="flex items-center gap-x-10 text-sm mt-5">
+
+                <!-- Opción: Delivery -->
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="tipoPedido" [(ngModel)]="tipoPedido" [value]="'delivery'"
+                        class="hidden" />
+                    <span
+                        class="w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors duration-200"
+                        [ngClass]="{
+                            'border-primary': tipoPedido === 'delivery',
+                            'border-gray-400': tipoPedido !== 'delivery'
+                        }">
+                        <span class="w-2 h-2 rounded-full"
+                            [ngClass]="{ 'bg-primary': tipoPedido === 'delivery' }"></span>
+                    </span>
+                    Delivery
+                </label>
+
+                <!-- Opción: Recojo en tienda -->
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="tipoPedido" [(ngModel)]="tipoPedido" [value]="'recojo'" class="hidden" />
+                    <span
+                        class="w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors duration-200"
+                        [ngClass]="{
+                            'border-primary': tipoPedido === 'recojo',
+                            'border-gray-400': tipoPedido !== 'recojo'
+                        }">
+                        <span class="w-2 h-2 rounded-full" [ngClass]="{ 'bg-primary': tipoPedido === 'recojo' }"></span>
+                    </span>
+                    Recojo en tienda
+                </label>
+            </div>
+
+            <!-- Dirección: Recojo en tienda o Domicilio -->
+            <div class="grid grid-cols-[auto_1fr] items-center gap-x-3 my-5 text-sm">
+                @if (tipoPedido === 'delivery') {
+                <svg lucideShoppingBag class="text-gray-500 size-4" />
+                } @else {
+                <svg lucideStore class="text-gray-500 size-4" />
+                }
+
+                <!-- Dirección -->
+                <input type="text"
+                    class="border border-gray-300 rounded-md px-3 py-2 text-sm w-full focus:outline-primary"
+                    [disabled]="tipoPedido !== 'delivery'"
+                    [value]="tipoPedido === 'delivery' ? orderCartService.deliveryAddress() : 'Miguel Grau 872, Monsefú 14831'"
+                    (input)="onAddressChange($event)"
+                    [placeholder]="tipoPedido === 'delivery' ? 'Ingrese dirección de entrega' : ''">
+            </div>
+
+            <!-- Tiempo de Entrega -->
+            <div class="flex items-center gap-x-3 text-sm">
+                <svg lucideClock class="text-gray-500 size-4" />
+                <p class="text-gray-500">Tiempo Estimado:</p>
+                <input type="number" placeholder="00"
+                    class="border border-gray-300 rounded-md px-3 py-1 text-sm w-16 focus:outline-primary"
+                    [value]="orderCartService.estimatedTime()" (input)="onTimeChange($event)">
+                <p>min</p>
+            </div>
+        </div>
+
+
+        <!-- Método de Pago  -->
+        <div class="space-y-2 text-sm py-5">
+            <h3 class="font-medium text-sm">Pago</h3>
+
+            <!-- Método de Pago -->
+            <div class="flex items-center gap-x-3 text-sm">
+                <svg lucideWallet class="text-gray-500 min-w-4 size-4" />
+
+                <p class="text-gray-500 w-full">Método:</p>
+
+                <!-- Select -->
+                <select data-hs-select='{
+                    "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
+                    "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-2 ps-3.5 pe-9 flex gap-x-2 text-nowrap cursor-pointer bg-white w-40 border border-gray-200 rounded-lg text-start text-sm focus:outline-hidden focus:ring-2 focus:ring-primary",
+                    "dropdownClasses": "z-50 w-full animate-fade-in max-h-72 p-1 bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300",
+                    "optionClasses": "py-2 px-3 w-full text-sm cursor-pointer hover:bg-gray-100 rounded-lg focus:outline-hidden focus:bg-gray-100 hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50",
+                    "optionTemplate": "<div class=\"flex justify-between items-center w-full\"><span data-title></span><span class=\"hidden hs-selected:block\"><svg class=\"shrink-0 size-4 text-primary \" xmlns=\"http:.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg></span></div>",
+                    "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevron-down-icon lucide-chevron-down shrink-0 size-3.5 text-gray-500\"><path d=\"m6 9 6 6 6-6\"/></svg></div>"
+                }' class="hidden">
+                    <option value="En efectivo">En efectivo</option>
+                    <option value="Yape">Yape</option>
+                    <option value="Plin">Plin</option>
+                    <option value="Tarjeta">Tarjeta</option>
+                    <option value="Transferencia">Transferencia</option>
+                </select>
+                <!-- End Select -->
+
+            </div>
+        </div>
+
+        <!-- Tomado por  -->
+        <div class="space-y-1 text-sm py-5" *ngIf="userProfile()">
+
+            <h2 class="font-medium">Tomado por</h2>
+
+            <a [routerLink]="'/dashboard/usuarios/' + userProfile()?.id"
+                class="py-2 flex hover:bg-zinc-100 items-center rounded-lg gap-x-3 text-sm">
+
+                <!-- Foto de perfil -->
+                <div class="bg-gray-200 rounded-full min-h-10 min-w-10 size-10 contain-content row-span-2">
+                    <img [src]="userProfile()?.photoUrl || 'https://via.placeholder.com/150'" alt="" class="h-full">
+                </div>
+
+                <div class="flex flex-col w-full">
+                    <!-- Nombre del usuario -->
+                    <p
+                        class="capitalize font-medium group-hover:text-primary-dark underline-offset-4 group-hover:underline">
+                        {{ userProfile()?.names }}
+                    </p>
+
+                    <!-- Rol del usuario -->
+                    <p class="text-gray-500 text-xs">{{ userRoleName() }}</p>
+                </div>
+
+                <svg lucideChevronRight class="size-5 text-gray-600 row-span-2" />
+            </a>
+        </div>
+
+    </div>
+
+</section>

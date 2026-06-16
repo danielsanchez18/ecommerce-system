@@ -1,0 +1,191 @@
+<div
+    class="hs-overlay-animation-target hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95 opacity-0 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-56px)] flex items-center">
+    <div
+        class="w-full flex flex-col bg-white border border-gray-300 shadow-2xs rounded-xl pointer-events-auto overflow-hidden">
+
+        <div class="flex justify-between items-center border-b border-gray-300 px-6 py-4">
+            <div>
+                <h3 class="text-base font-medium">Editar Producto</h3>
+                <p class="text-xs text-gray-700 mt-0.5">Completa la información para modificar el producto en el sistema
+                </p>
+            </div>
+            <button type="button" (click)="onCancel()"
+                class="size-8 inline-flex justify-center items-center gap-x-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-300 disabled:opacity-50 disabled:pointer-events-none"
+                aria-label="Close" data-hs-overlay="#hs-edit-product-modal">
+                <svg lucideX class="size-4" />
+            </button>
+        </div>
+
+        <!-- Form Content -->
+        <form [formGroup]="productForm" (ngSubmit)="onSubmit()"
+            class="flex-1 overflow-y-auto p-6 space-y-5 max-h-[70vh]">
+
+            <!-- Imagen del Producto -->
+            <div class="flex flex-col gap-y-2">
+                <label class="text-xs tracking-wider uppercase font-semibold">Imagen del Producto</label>
+
+                <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" class="hidden" />
+
+                <div (click)="fileInput.click()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+                    (drop)="onDrop($event)" [ngClass]="{
+                        'bg-gray-50 border-primary': isDragging || selectedFile,
+                        'bg-white border-gray-300': !isDragging && !selectedFile
+                    }"
+                    class="relative border border-dashed rounded-xl p-5 flex flex-col items-center justify-center gap-y-1 group hover:bg-gray-50 hover:border-primary transition cursor-pointer">
+
+                    @if (imagePreview) {
+                    <img [src]="imagePreview" class="max-h-32 object-cover rounded-lg" />
+                    <button type="button" (click)="$event.stopPropagation(); removeImage()"
+                        class="absolute top-2 right-2 p-1.5 rounded-full bg-red-100 hover:bg-red-200 text-red-700 transition">
+                        <svg lucideX class="size-3.5" />
+                    </button>
+                    } @else {
+                    <div
+                        class="p-3 bg-white rounded-full text-gray-700 group-hover:text-primary transition-all border border-gray-200">
+                        <svg lucideUploadCloud class="size-6"></svg>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-sm font-semibold">Haz clic para subir</span>
+                        <span class="text-sm"> o arrastra y suelta</span>
+                    </div>
+                    <span class="text-xs text-gray-700">PNG, JPG, JPEG, WEBP (Máx. 2MB)</span>
+                    }
+                </div>
+            </div>
+
+            <!-- Nombre -->
+            <div class="flex flex-col gap-y-2">
+                <label class="text-xs tracking-wider uppercase font-semibold">
+                    Nombre del Producto
+                    <span class="text-red-500">*</span>
+                </label>
+                <input type="text" placeholder="Ingrese el nombre del producto" formControlName="name" [ngClass]="{
+                        'border-red-500 focus:ring-red-500 focus:border-red-500 ring-red-500/20': nameControl?.invalid && (nameControl?.dirty || nameControl?.touched),
+                        'border-gray-300 focus:ring-primary': !(nameControl?.invalid && (nameControl?.dirty || nameControl?.touched))
+                    }" class="w-full text-sm border rounded-lg py-2 px-4 focus:outline-none focus:ring-[1.5px]">
+                @if (nameControl?.invalid && (nameControl?.dirty || nameControl?.touched)) {
+                <span class="text-xs text-red-500 mt-1">
+                    @if (nameControl?.errors?.['required']) { El nombre es obligatorio. }
+                    @else if (nameControl?.errors?.['minlength']) { Debe tener al menos 3 caracteres. }
+                    @else if (nameControl?.errors?.['maxlength']) { No puede exceder los 50 caracteres. }
+                </span>
+                }
+            </div>
+
+            <!-- Descripción corta -->
+            <div class="flex flex-col gap-y-2">
+                <label class="text-xs tracking-wider uppercase font-semibold">
+                    Descripción corta
+                    <span class="text-red-500">*</span>
+                </label>
+                <input type="text" placeholder="Ingrese una descripción corta del producto"
+                    formControlName="shortDescription" [ngClass]="{
+                        'border-red-500 focus:ring-red-500 focus:border-red-500 ring-red-500/20': shortDescriptionControl?.invalid && (shortDescriptionControl?.dirty || shortDescriptionControl?.touched),
+                        'border-gray-300 focus:ring-primary': !(shortDescriptionControl?.invalid && (shortDescriptionControl?.dirty || shortDescriptionControl?.touched))
+                    }" class="w-full text-sm border rounded-lg py-2 px-4 focus:outline-none focus:ring-[1.5px]">
+                @if (shortDescriptionControl?.invalid && (shortDescriptionControl?.dirty ||
+                shortDescriptionControl?.touched)) {
+                <span class="text-xs text-red-500 mt-1">
+                    @if (shortDescriptionControl?.errors?.['required']) { La descripción corta es obligatoria. }
+                    @else if (shortDescriptionControl?.errors?.['minlength']) { Debe tener al menos 5 caracteres. }
+                </span>
+                }
+            </div>
+
+            <!-- Categoría -->
+            <div class="flex flex-col gap-y-2">
+                <label class="text-xs tracking-wider uppercase font-semibold">
+                    Categoría
+                    <span class="text-red-500">*</span>
+                </label>
+                <select formControlName="categoryId" [ngClass]="{
+                        'border-red-500 focus:ring-red-500 focus:border-red-500 ring-red-500/20': categoryIdControl?.invalid && (categoryIdControl?.dirty || categoryIdControl?.touched),
+                        'border-gray-300 focus:ring-primary': !(categoryIdControl?.invalid && (categoryIdControl?.dirty || categoryIdControl?.touched))
+                    }"
+                    class="w-full text-sm border rounded-lg py-2 px-4 focus:outline-none focus:ring-[1.5px] bg-white">
+                    <option value="" disabled selected>Seleccione una categoría</option>
+                    @for (cat of categories; track cat.id) {
+                    <option [value]="cat.id">{{ cat.name }}</option>
+                    }
+                </select>
+                @if (categoryIdControl?.invalid && (categoryIdControl?.dirty || categoryIdControl?.touched)) {
+                <span class="text-xs text-red-500 mt-1">La categoría es obligatoria.</span>
+                }
+            </div>
+
+            <!-- Precio y Tiempo -->
+            <div class="grid sm:grid-cols-2 gap-5">
+                <div class="flex flex-col gap-y-2">
+                    <label class="text-xs tracking-wider uppercase font-semibold">
+                        Precio base (S/.)
+                        <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" step="0.01" placeholder="0.00" formControlName="basePrice" [ngClass]="{
+                            'border-red-500 focus:ring-red-500 focus:border-red-500 ring-red-500/20': basePriceControl?.invalid && (basePriceControl?.dirty || basePriceControl?.touched),
+                            'border-gray-300 focus:ring-primary': !(basePriceControl?.invalid && (basePriceControl?.dirty || basePriceControl?.touched))
+                        }" class="w-full text-sm border rounded-lg py-2 px-4 focus:outline-none focus:ring-[1.5px]">
+                    @if (basePriceControl?.invalid && (basePriceControl?.dirty || basePriceControl?.touched)) {
+                    <span class="text-xs text-red-500 mt-1">
+                        @if (basePriceControl?.errors?.['required']) { El precio es obligatorio. }
+                        @else if (basePriceControl?.errors?.['min']) { Debe ser mayor que 0. }
+                    </span>
+                    }
+                </div>
+
+                <div class="flex flex-col gap-y-2">
+                    <label class="text-xs tracking-wider uppercase font-semibold">
+                        Tiempo preparacion (min)
+                        <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" placeholder="Tiempo en minutos" formControlName="preparationTime" [ngClass]="{
+                            'border-red-500 focus:ring-red-500 focus:border-red-500 ring-red-500/20': preparationTimeControl?.invalid && (preparationTimeControl?.dirty || preparationTimeControl?.touched),
+                            'border-gray-300 focus:ring-primary': !(preparationTimeControl?.invalid && (preparationTimeControl?.dirty || preparationTimeControl?.touched))
+                        }" class="w-full text-sm border rounded-lg py-2 px-4 focus:outline-none focus:ring-[1.5px]">
+                    @if (preparationTimeControl?.invalid && (preparationTimeControl?.dirty ||
+                    preparationTimeControl?.touched)) {
+                    <span class="text-xs text-red-500 mt-1">
+                        @if (preparationTimeControl?.errors?.['required']) { El tiempo es obligatorio. }
+                        @else if (preparationTimeControl?.errors?.['min']) { Debe ser al menos 1 min. }
+                    </span>
+                    }
+                </div>
+            </div>
+
+            <!-- Descripción detallada -->
+            <div class="flex flex-col gap-y-2">
+                <label class="text-xs tracking-wider uppercase font-semibold">Descripción detallada</label>
+                <textarea rows="3" formControlName="description"
+                    class="w-full text-sm bg-white border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-[1.5px] focus:ring-primary resize-none"
+                    placeholder="Describe el producto detalladamente (ingredientes, alérgenos, etc.)..."></textarea>
+            </div>
+
+            <!-- Estado -->
+            <div class="flex flex-col gap-y-2">
+                <label class="text-xs tracking-wider uppercase font-semibold">Estado</label>
+                <div class="flex items-center">
+                    <label class="relative inline-flex items-center cursor-pointer select-none">
+                        <input type="checkbox" formControlName="enabled" class="sr-only peer" />
+                        <div
+                            class="w-12.5 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-[22px] peer-checked:after:border-white after:content-[''] after:absolute after:top-[3px] after:inset-s-[3px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5.5 after:w-5.5 after:transition-all peer-checked:bg-primary">
+                        </div>
+                        <span class="ms-3 text-sm font-medium">Activo (Visible en tienda)</span>
+                    </label>
+                </div>
+            </div>
+
+        </form>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 border-t border-gray-300 bg-gray-50 flex items-center justify-end gap-x-3">
+            <button type="button" (click)="onCancel()"
+                class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 hover:text-black focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors disabled:opacity-50 cursor-pointer">
+                Cancelar
+            </button>
+            <button type="button" (click)="onSubmit()" [disabled]="productForm.invalid || isLoading"
+                class="px-4 py-2 bg-primary hover:bg-primary-hover text-white rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors flex items-center gap-x-2 disabled:opacity-60 cursor-pointer">
+                <span>{{ isLoading ? 'Guardando...' : 'Guardar Cambios' }}</span>
+            </button>
+        </div>
+
+    </div>
+</div>

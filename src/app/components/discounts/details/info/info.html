@@ -1,0 +1,131 @@
+@if (discount) {
+<section class="grid lg:grid-cols-2 gap-5">
+
+    <!-- Información del producto -->
+    <div class="border border-gray-300 rounded-xl bg-white overflow-hidden">
+
+        <h3 class="px-5 py-3 border-b border-gray-300 text-sm font-medium">Información del producto</h3>
+
+        <div class="p-3 space-y-2">
+            <div class="w-full text-start p-2 flex items-center gap-x-3 rounded-lg">
+
+                <!-- Imagen del producto -->
+                <div
+                    class="size-14 rounded-md bg-gray-100 flex items-center justify-center border border-gray-200 overflow-hidden shrink-0">
+                    @if (discount.productImageUrl) {
+                    <img [src]="discount.productImageUrl" [alt]="discount.productName" class="size-full object-cover" />
+                    } @else {
+                    <svg lucideTag class="size-4.5 text-gray-500" />
+                    }
+                </div>
+
+                <!-- Nombre del producto y categoría -->
+                <div class="space-y-0.5">
+                    <div class="flex items-center gap-x-1.5">
+                        <p class="font-medium text-sm text-black">
+                            {{ discount.productName }}
+                        </p>
+                        @if (discount.enabled && !discount.deleted) {
+                        <svg lucideBadgeCheck class="size-4 text-green-600" />
+                        } @else {
+                        <svg lucideBadgeMinus class="size-4 text-gray-500" />
+                        }
+                    </div>
+                    <div class="flex items-center gap-x-1">
+                        <svg lucideTag class="size-3 text-gray-700" />
+                        <p class="text-gray-700 text-sm">{{ discount.categoryName || 'Sin categoría' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mx-2 pt-5 border-t border-gray-300 space-y-1">
+
+                <div class="text-sm flex items-center justify-between">
+                    <p class="">Precio original:</p>
+                    <p class="text-gray-900">{{ discount.originalPrice | currency:'S/. ' }}</p>
+                </div>
+
+                <div class="text-primary font-medium text-sm flex items-center justify-between">
+                    <p class="">Descuento:</p>
+                    <p class="">
+                        @if (discount.discountType === 'descPorcentaje') {
+                        {{ discount.discountAmount }}%
+                        } @else {
+                        {{ discount.discountAmount | currency:'S/. ' }}
+                        }
+                    </p>
+                </div>
+
+                <div
+                    class="text-sm flex font-medium mt-3 items-center justify-between pt-3 border-t border-dashed border-gray-200">
+                    <p class="">Precio final:</p>
+                    <p class="">{{ discount.finalPrice | currency:'S/. ' }}</p>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Detalles del descuento -->
+    <div class="border border-gray-300 rounded-xl bg-white overflow-hidden">
+
+        <h3 class="px-5 py-3 border-b border-gray-300 text-sm font-medium">
+            Información del descuento
+        </h3>
+
+        <div class="p-5 flex flex-col gap-y-3">
+
+            <div class="text-sm flex items-center gap-x-2 text-gray-700">
+                <svg lucideTag class="size-4 shrink-0" />
+                <p class="w-20 shrink-0">Código:</p>
+                <p class="font-medium text-black select-all bg-gray-100 px-2 py-0.5 rounded-md border border-gray-200">
+                    {{ discount.code }}</p>
+            </div>
+
+            <div class="text-sm flex items-start gap-x-2 text-gray-700">
+                <svg lucideClock class="size-4 shrink-0 mt-0.5" />
+                <div class="flex-1">
+                    <div class="flex items-center gap-x-2">
+                        <p class="w-20 shrink-0 text-gray-700">Periodo:</p>
+                        <p class="font-medium text-black">
+                            {{ discount.startDate | date:'dd MMM yyyy, hh:mm a' }} - {{ discount.endDate | date:'dd MMM yyyy, hh:mm a' }}
+                        </p>
+                    </div>
+                    @if (countdownText) {
+                    <p class="text-sm text-gray-700 mt-2 flex items-center gap-x-1.5">
+                        <span class="inline-block min-w-2 size-2 rounded-full bg-primary animate-pulse shrink-0"></span>
+                        {{ countdownText }}
+                    </p>
+                    }
+                </div>
+            </div>
+
+            <div class="text-sm flex items-center gap-x-2 text-gray-700">
+                <svg lucideCalendarClock class="size-4 shrink-0" />
+                <p class="w-20 shrink-0">Creado:</p>
+                <p class="font-medium text-black">
+                    {{ discount.createdAt | date:'dd/MM/yyyy, hh:mm a' }}
+                </p>
+            </div>
+
+            <div class="text-sm flex items-center gap-x-2 text-gray-700">
+                <svg lucideCircleCheck class="size-4 shrink-0 text-gray-700" />
+                <p class="w-20 shrink-0">Estado:</p>
+                <component-shared-states [state]="getDiscountStatus(discount)" />
+            </div>
+
+            <div class="text-sm flex items-center gap-x-2 text-gray-700">
+                <svg lucideBadgePercent class="size-4 shrink-0" />
+                <p class="w-20 shrink-0">Usos:</p>
+                <p class="font-medium text-black">
+                    {{ discount.uses }} @if (discount.maxUses > 0) { de {{ discount.maxUses }} } @else { (Sin límite) }
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+}

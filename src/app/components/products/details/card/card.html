@@ -1,0 +1,85 @@
+@if (product) {
+<section class="w-full bg-white rounded-xl border border-gray-300 contain-content p-4
+    xl:grid xl:grid-cols-[auto_1fr] gap-x-10 items-center h-full">
+
+    <!-- Imagen -->
+    <div
+        class="bg-gray-100 xl:size-62 w-full h-62 rounded-lg contain-content relative group flex items-center justify-center border border-gray-200">
+        @if (product.imageUrl) {
+        <img [src]="product.imageUrl" [alt]="product.name"
+            class="h-full w-full rounded-lg object-cover justify-self-center">
+        <div
+            class="w-full h-full bg-black/20 z-50 absolute group-hover:flex items-center justify-center hidden top-0 p-2">
+            <a [href]="product.imageUrl" target="_blank"
+                class="text-xs font-medium bg-gray-950 hover:shadow-md h-fit text-white rounded-lg px-4 p-2">
+                Ver imagen completa
+            </a>
+        </div>
+        } @else {
+        <div class="flex flex-col items-center justify-center text-gray-400 gap-y-2">
+            <svg lucideTag class="size-10" />
+            <span class="text-xs font-medium">Sin imagen</span>
+        </div>
+        }
+    </div>
+
+    <!-- Información -->
+    <div class="space-y-5 py-5">
+
+        <!-- Nombre -->
+        <div class="space-y-2">
+            <div class="flex items-center gap-x-2">
+                <h3 class="font-medium text-lg">{{ product.name }}</h3>
+                @if (product.deleted) {
+                <svg lucideBadgeX class="text-red-600 size-5" />
+                } @else if (product.enabled) {
+                <svg lucideBadgeCheck class="text-green-600 size-5" />
+                } @else {
+                <svg lucideBadgeMinus class="text-gray-500 size-5" />
+                }
+            </div>
+            <p class="text-sm text-gray-700">{{ product.shortDescription || 'Sin descripción' }}</p>
+        </div>
+
+        <div class="space-y-2">
+            <!-- Categoría -->
+            <div class="flex text-sm items-center gap-x-2">
+                <svg lucideTag class="text-gray-700 size-4 stroke-[1.5]" />
+                <a [routerLink]="['/dashboard/categorias', product.categoryId]"
+                    class="text-gray-700 hover:underline underline-offset-4 hover:text-primary">{{ categoryName || 'Sin
+                    categoría' }}</a>
+            </div>
+
+            <!-- Tiempo de preparación -->
+            <div class="flex text-sm items-center gap-x-2">
+                <svg lucideClock class="text-gray-700 size-4 stroke-[1.5]" />
+                <p class="text-gray-700">Tiempo de preparación:</p>
+                <p class="font-medium">{{ product.preparationTime }} minutos</p>
+            </div>
+        </div>
+
+        <!-- Precio -->
+        <div class="flex items-center gap-x-4">
+            <p class="font-medium leading-none">{{ product.basePrice | currency:'S/. ' }}</p>
+            @if (product.deleted) {
+            <component-shared-states state="Eliminado" />
+            } @else if (!product.enabled) {
+            <component-shared-states state="Oculto" />
+            } @else if (product.inPromotion) {
+            <component-shared-states state="En Promocion" />
+            } @else if (product.inDiscount) {
+            <component-shared-states state="En Oferta" />
+            } @else {
+            <component-shared-states state="Activo" />
+            }
+        </div>
+
+    </div>
+</section>
+} @else {
+<div
+    class="p-6 rounded-xl border border-gray-300 bg-white flex flex-col items-center justify-center min-h-64 text-gray-500">
+    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-3"></div>
+    <p class="text-sm">Cargando detalles del producto...</p>
+</div>
+}

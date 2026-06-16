@@ -1,0 +1,75 @@
+<div class="px-5 py-3 bg-gray-950 font-medium rounded-full flex items-center gap-x-7 text-sm">
+
+  @if (btnDelete) {
+  <button (click)="deleteClick.emit()" class="text-red-400 hover:underline underline-offset-4">
+    Eliminar
+  </button>
+  }
+
+  @if (btnRestore) {
+  <button (click)="restoreClick.emit()" class="text-white hover:underline underline-offset-4">
+    Restaurar
+  </button>
+  }
+
+  @if (btnEdit) {
+  <button (click)="editClick.emit()" class="text-green-500 border-gray-300 hover:underline underline-offset-4">
+    Editar
+  </button>
+  }
+
+  @if (btnSave) {
+  <button (click)="saveClick.emit()" class="text-green-500 border-gray-300 hover:underline underline-offset-4">
+    Guardar
+  </button>
+  }
+
+  @if (btnSaveChanges) {
+  <button (click)="saveChangesClick.emit()" class="text-green-500 border-gray-300 hover:underline underline-offset-4">
+    Guardar Cambios
+  </button>
+  }
+
+  @if (btnCancel) {
+  <a routerLink=".." class="text-white border-gray-300 hover:underline underline-offset-4">
+    Cancelar
+  </a>
+  }
+
+  @if (btnExport) {
+  <a routerLink="exportar" class="text-white hover:underline underline-offset-4">
+    Exportar
+  </a>
+  }
+
+  @if (btnDisable) {
+  <button (click)="disableClick.emit()" class="text-white hover:underline underline-offset-4">
+    Suspender
+  </button>
+  }
+
+  @if (btnReject) {
+  <button (click)="rejectClick.emit()" class="text-red-400 hover:underline underline-offset-4">
+    Rechazar Pedido
+  </button>
+  }
+
+  @if (btnReceipt) {
+  <button (click)="receiptClick.emit()" class="text-blue-400 hover:underline underline-offset-4">
+    Ver Recibo
+  </button>
+  }
+
+  @if (btnInvoice) {
+  <button (click)="invoiceClick.emit()" class="text-green-400 hover:underline underline-offset-4">
+    Facturación
+  </button>
+  }
+
+  @if (btnEnable) {
+  <button (click)="enableClick.emit()" class="text-white hover:underline underline-offset-4">
+    Habilitar
+  </button>
+  }
+
+</div>

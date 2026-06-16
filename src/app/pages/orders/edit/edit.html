@@ -1,0 +1,38 @@
+<main class="w-full px-4 md:px-7 lg:px-10 flex flex-col gap-y-7 relative">
+
+    <ng-container *ngIf="order && !isLoading">
+        <div>
+            <a routerLink=".."
+                class="text-sm text-primary font-medium hover:underline hover:text-primary-hover">Regresar</a>
+
+            <div class="flex items-center gap-x-3">
+                <h1 class="text-lg font-medium line-clamp-1">Pedido #{{ order.orderCode }}</h1>
+
+            </div>
+        </div>
+
+        <!-- Contenido -->
+        <div class="grid xl:grid-cols-[1fr_auto] gap-5 h-full">
+
+            <!-- Lista de Productos -->
+            <div class="overflow-y-auto gap-5 order-2 xl:order-1 grid grid-rows-[1fr_auto]">
+                <component-restaurant-order-select-products />
+            </div>
+
+            <!-- Información del Pedido -->
+            <div class="relative order-1 xl:order-2">
+                <div class="sticky top-0">
+                    <component-restaurant-order-summary />
+                </div>
+            </div>
+
+        </div>
+
+        <div class="sticky bottom-0">
+            <div class="w-fit mx-auto">
+                <component-shared-toast [btnCancel]="true" [btnSaveChanges]="true"
+                    (saveChangesClick)="onSaveChanges()" />
+            </div>
+        </div>
+    </ng-container>
+</main>

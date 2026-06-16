@@ -1,0 +1,152 @@
+<section class="row-span-2 w-full xl:w-sm bg-white rounded-xl border border-gray-300 contain-content relative">
+
+    <!-- Título -->
+    <div class="px-4 py-3 border-b border-gray-300">
+        <h3 class="font-medium text-sm">Información del pedido</h3>
+    </div>
+
+    <!-- Contenido -->
+    <div class="divide-y divide-gray-300 mx-4">
+
+        <div class="space-y-2 py-5">
+
+            <!-- If: Pedido en mesa -->
+            <div *ngIf="order.orderType === 'DINE_IN'" class="flex items-center gap-x-3 text-sm">
+                <svg lucideUtensilsCrossed class="text-gray-500 size-4" />
+                <p class="text-gray-500">Mesa(s):</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-xs font-medium border border-gray-200 px-2 py-1 rounded-md uppercase">
+                        Mesa {{ order.tableNumber ? order.tableNumber : 'N/A' }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Fecha de Creación -->
+            <div class="flex items-center gap-x-3 text-sm">
+                <svg lucideCalendarClock class="text-gray-700 size-4 " />
+                <p class="text-gray-700">Ordenado:</p>
+                <p>{{ order.createdAt | date:'short' }}</p>
+            </div>
+
+            <!-- Descuento Manual -->
+            <div class="flex items-center gap-x-3 text-sm" *ngIf="order.manualDiscount > 0">
+                <svg lucideTicketPercent class="text-gray-700 size-4 " />
+                <p class="text-gray-700">Descuento Manual:</p>
+                <p class="text-primary">- S/. {{ order.manualDiscount | number:'1.2-2' }}</p>
+            </div>
+
+        </div>
+
+
+        <!-- Tomado por  -->
+        <div class="space-y-1 text-sm py-5" *ngIf="order.attendedBy">
+
+            <h2 class="font-medium">Atendido por personal</h2>
+
+            <a routerLink="/dashboard/usuarios/{{order.attendedBy}}"
+                class="py-2 flex hover:bg-zinc-100 items-center rounded-lg gap-x-3 text-sm">
+
+                <!-- Foto de perfil -->
+                <div
+                    class="bg-gray-200 rounded-full min-h-10 min-w-10 size-10 contain-content row-span-2 flex items-center justify-center">
+                    <span class="text-xs font-medium text-gray-500">ID</span>
+                </div>
+
+                <div class="flex flex-col w-full">
+                    <!-- Nombre del usuario -->
+                    <p
+                        class="capitalize font-medium group-hover:text-primary-dark underline-offset-4 group-hover:underline">
+                        {{ employeeName }}
+                    </p>
+                    <p class="text-gray-700 text-xs">{{ employeeRole }}</p>
+                </div>
+
+                <svg lucideChevronRight class="size-5 text-gray-600 row-span-2" />
+            </a>
+        </div>
+
+
+        <!-- Entrega  -->
+        <div class="space-y-2 text-sm py-5">
+
+            <!-- Tipo de Pedido -->
+            <div class="flex items-center gap-x-3 text-sm">
+                <svg lucideShoppingBag class="text-gray-700 size-4 " />
+                <p *ngIf="order.orderType === 'PICKUP'">Recojo en Tienda</p>
+                <p *ngIf="order.orderType === 'DELIVERY'">Entrega a Domicilio</p>
+                <p *ngIf="order.orderType === 'DINE_IN'">Consumo en Local</p>
+            </div>
+
+            <!-- Dirección -->
+            <div class="flex items-center gap-x-3 text-sm" *ngIf="order.orderType === 'DELIVERY'">
+                <svg lucideTruck class="text-gray-700 size-4 " />
+                <p class="line-clamp-1">Dirección de entrega no especificada</p>
+            </div>
+
+            <div class="flex items-center gap-x-3 justify-between" *ngIf="order.orderType === 'DELIVERY'">
+                <h2 class="font-medium text-white">...</h2>
+                <a href="https://www.google.es/maps" target="_blank"
+                    class="font-medium flex items-center gap-x-1 underline-offset-4 hover:underline text-primary">
+                    <svg lucideMap class="size-4 " />
+                    Ver en Maps
+                </a>
+            </div>
+
+            <!-- Tiempo de Entrega -->
+            <div class="flex items-center gap-x-3 text-sm"
+                *ngIf="order.orderType === 'DELIVERY' || order.orderType === 'PICKUP'">
+                <svg lucideClock class="text-gray-700 size-4 " />
+                <p class="text-gray-700 whitespace-nowrap">Tiempo Estimado:</p>
+                <div class="flex items-center gap-x-2">
+                    <p class="text-sm font-medium">{{ order.preparationTime }} min</p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Método de Pago  -->
+        <div class="space-y-2 text-sm py-5">
+            <div class="flex items-center justify-between gap-x-2">
+                <h3 class="font-medium text-sm">Pago</h3>
+                <component-shared-states [state]="order.paymentMethod ? 'Pagado' : 'Pendiente'" />
+            </div>
+
+            <!-- Método de Pago -->
+            <div class="flex items-center gap-x-3 text-sm">
+                <svg lucideWallet class="text-gray-700 size-4 " />
+                <p class="text-gray-700">Método:</p>
+                <p>{{ mapPaymentMethod(order.paymentMethod) }}</p>
+            </div>
+        </div>
+
+
+        <!-- If: se asocia a un Cliente -->
+        <div class="space-y-1 text-sm py-5" *ngIf="order.userId">
+
+            <h2 class="font-medium">Cliente</h2>
+
+            <a routerLink="/dashboard/usuarios/{{order.userId}}"
+                class="py-2 flex hover:bg-zinc-100 items-center rounded-lg gap-x-3 text-sm">
+
+                <!-- Foto de perfil -->
+                <div
+                    class="bg-gray-200 rounded-full min-h-10 min-w-10 size-10 contain-content row-span-2 flex items-center justify-center">
+                    <span class="text-xs font-medium text-gray-500">ID</span>
+                </div>
+
+                <div class="flex flex-col w-full">
+                    <!-- Nombre del usuario -->
+                    <p
+                        class="capitalize font-medium group-hover:text-primary-dark underline-offset-4 group-hover:underline">
+                        Usuario ID: {{ order.userId.split('-')[0] }}
+                    </p>
+                    <p class="text-gray-700 text-xs">Cliente Registrado</p>
+                </div>
+
+                <svg lucideChevronRight class="size-5 text-gray-600 row-span-2" />
+            </a>
+        </div>
+
+    </div>
+
+</section>

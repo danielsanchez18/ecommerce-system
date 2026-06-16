@@ -1,0 +1,28 @@
+<article class="rounded-2xl border border-gray-300 bg-white overflow-hidden">
+    <div class="px-5 py-3 border-b border-gray-300 flex justify-between items-center">
+        <h2 class="text-sm font-medium">Pedidos Recientes</h2>
+    </div>
+
+    <div class="p-5 flex flex-col gap-5">
+        @if (loading) {
+            <p class="text-sm text-gray-500 text-center py-4">Cargando pedidos...</p>
+        } @else if (orders.length > 0) {
+            <component-orders-table 
+                [orders]="orders" 
+                (viewClick)="onViewOrder($event)" 
+                (editClick)="onEditOrder($event)">
+            </component-orders-table>
+        } @else {
+            <component-shared-empty />
+        }
+
+        @if (page && page.totalPages > 1) {
+            <component-shared-paginator 
+                [page]="page.number" 
+                [totalPages]="page.totalPages" 
+                [totalElements]="page.totalElements"
+                (pageChange)="onPageChange($event)">
+            </component-shared-paginator>
+        }
+    </div>
+</article>

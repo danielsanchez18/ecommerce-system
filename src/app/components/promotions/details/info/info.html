@@ -1,0 +1,113 @@
+<div class="grid gap-5 h-full" *ngIf="promotion">
+
+    <section class="w-full h-full border border-gray-300 rounded-xl p-4 sm:p-5 space-y-5 bg-white">
+
+        <!-- ID, Fechas, Estado -->
+        <div class="flex items-center gap-x-2">
+
+            <!-- ID -->
+            <p class="px-3 py-1 border text-[13px] border-gray-300 bg-white font-medium rounded-full">
+                ID: {{ promotion.code }}
+            </p>
+
+            <!-- Estado -->
+            <component-shared-states [state]="getPromotionStatus(promotion)" />
+        </div>
+
+        <!-- Titulo, Tipo -->
+        <div class="space-y-2">
+
+            <!-- Titulo -->
+            <h1 class="text-lg font-medium">{{ promotion.name }}</h1>
+
+            <!-- Tipo -->
+            <div class="flex items-center gap-x-2">
+
+                @if (promotion.type === 'Percent') {
+                <svg lucidePercent class="size-4 text-green-700" />
+                }
+                @if (promotion.type === 'BOGO') {
+                <svg lucideGift class="size-4 text-pink-700" />
+                }
+                @if (promotion.type === 'Combo') {
+                <svg lucideTag class="size-4 text-orange-700" />
+                }
+
+                <span class="text-sm text-gray-700">{{ promotion.tag }}</span>
+
+            </div>
+        </div>
+
+        <!-- Descripción -->
+        <p class="text-sm text-gray-700">
+            {{ promotion.description || 'Sin descripción' }}
+        </p>
+
+        <div class="flex items-center gap-x-3">
+
+            <!-- Precio Final -->
+            <p class="font-medium">{{ promotion.finalPrice | currency:'S/. ':'symbol':'1.2-2':'en-US' }}</p>
+
+            <!-- Precio Original -->
+            <p class="text-sm text-gray-700 line-through">{{ promotion.originalPrice | currency:'S/.
+                ':'symbol':'1.2-2':'en-US' }}</p>
+
+            <!-- Descuento -->
+            <p *ngIf="discountPercent > 0" class="px-2 py-1 border text-xs font-medium rounded-full">{{ discountPercent
+                }}% OFF</p>
+        </div>
+
+    </section>
+
+    <section class="w-full border grid sm:grid-cols-2 gap-2 border-gray-300 rounded-xl p-5 bg-white">
+
+        <div class="flex items-start capitalize text-sm gap-x-2 sm:col-span-2">
+            <svg lucideCalendarClock class="size-4 text-gray-700 mt-0.5" />
+            <div>
+                <div class="flex items-center gap-x-2">
+                    <p class="text-gray-700">Periodo:</p>
+                    <p class="font-medium text-black">
+                        {{ promotion.startDate | date:'dd MMM yyyy, hh:mm a' }} - {{ promotion.endDate |
+                        date:'dd MMM yyyy, hh:mm a' }}
+                    </p>
+                </div>
+                @if (countdownText) {
+                <p class="text-sm text-gray-700 mt-1.5 flex items-center gap-x-1.5 normal-case">
+                    <span class="inline-block min-w-2 size-2 rounded-full bg-primary animate-pulse shrink-0"></span>
+                    {{ countdownText }}
+                </p>
+                }
+            </div>
+        </div>
+
+        <!-- Usos -->
+        <div class="w-full space-y-3 mt-3 sm:col-span-2">
+
+            <div class="flex items-center justify-between gap-x-2">
+                <p class="text-sm text-gray-700">Usos disponibles</p>
+                <p class="text-sm font-medium">
+                    {{ promotion.uses }} @if (promotion.maxUses > 0) { de {{ promotion.maxUses }} } @else { (Sin límite)
+                    }
+                </p>
+            </div>
+
+            <!-- Ranger Slide -->
+            <div class="w-full bg-gray-300 relative rounded-full py-1">
+                <div [style.width.%]="usagePercent"
+                    class="bg-primary absolute py-1 rounded-l-full top-0 transition-all duration-300 ease-out">
+                </div>
+                <div [style.left.%]="usagePercent"
+                    class="py-2 rounded-full bg-primary w-[10px] border-2 border-white absolute top-[-5px] transition-all duration-300 ease-out">
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-700 col-span-2">
+                {{ promotion.maxUses > 0 ? (promotion.maxUses - promotion.uses) + ' usos restantes' : 'Usos ilimitados'
+                }}
+            </p>
+
+        </div>
+
+    </section>
+
+</div>

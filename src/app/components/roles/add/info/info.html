@@ -1,0 +1,50 @@
+<section class="border border-gray-300 rounded-xl overflow-hidden" [formGroup]="infoForm">
+
+    <div class="px-5 py-3 border-b border-gray-300 text-sm font-medium">
+        <p>Información General</p>
+    </div>
+
+    <div class="px-5 py-5 flex flex-col gap-y-5">
+
+        <!-- Nombre del Rol -->
+        <div class="flex flex-col gap-y-2">
+            <label class="text-xs tracking-wider uppercase font-semibold">
+                Nombre del rol
+                <span class="text-red-500">*</span>
+            </label>
+            <input type="text" formControlName="name" placeholder="Ingrese el nombre del rol" maxlength="25"
+                class="w-full text-sm border rounded-lg py-2 px-4 focus:outline-none focus:ring-[1.5px] focus:ring-primary"
+                [ngClass]="(infoForm.get('name')?.invalid && infoForm.get('name')?.touched) ? 'border-red-500' : 'border-gray-300'">
+            @if (infoForm.get('name')?.invalid && infoForm.get('name')?.touched) {
+                <span class="text-xs text-red-500">El nombre es requerido y debe tener máximo 25 caracteres.</span>
+            } @else {
+                <span class="text-xs text-gray-500">El nombre del rol debe tener un máximo de 25 caracteres.</span>
+            }
+        </div>
+
+        <!-- Descripcion -->
+        <div class="flex flex-col gap-y-2">
+            <label class="text-xs tracking-wider uppercase font-semibold">
+                Descripción
+                <span class="text-red-500">*</span>
+            </label>
+            <textarea formControlName="description" placeholder="Ingrese la descripción del rol" rows="3" maxlength="250"
+                class="w-full text-sm border rounded-lg py-2 px-4 focus:outline-none focus:ring-[1.5px] focus:ring-primary resize-none h-14"
+                [ngClass]="(infoForm.get('description')?.invalid && infoForm.get('description')?.touched) ? 'border-red-500' : 'border-gray-300'"></textarea>
+            @if (infoForm.get('description')?.invalid && infoForm.get('description')?.touched) {
+                <span class="text-xs text-red-500">La descripción es requerida y debe tener máximo 250 caracteres.</span>
+            } @else {
+                <span class="text-xs text-gray-500">La descripción del rol debe tener un máximo de 250 caracteres.</span>
+            }
+        </div>
+
+        <div class="bg-gray-100 p-3 rounded-lg flex items-center gap-x-2">
+            <svg lucideInfo class="min-w-4 size-4" />
+            <p class="text-sm">
+                Los roles se crean por defecto con un estado:
+                <span class="font-medium"> Activo</span>
+            </p>
+        </div>
+    </div>
+
+</section>

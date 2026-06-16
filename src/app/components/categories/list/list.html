@@ -1,0 +1,32 @@
+<section class="lg:border border-gray-300 lg:rounded-xl lg:p-5 flex flex-col gap-7">
+
+    <div class="flex items-center justify-between gap-2">
+
+        <component-shared-search-box class="w-full md:max-w-sm" placeholder="Buscar categorías por nombre"
+            [searchQuery]="searchTerm" (searchQueryChange)="onSearchQueryChange($event)" />
+
+        <div class="flex items-center gap-x-1">
+            <component-shared-import />
+            <component-shared-filters />
+        </div>
+
+    </div>
+
+    <div>
+        @if (categories.length > 0) {
+        <component-categories-table [categories]="categories" [productCounts]="productCounts"
+            (viewClick)="onViewCategory($event)" (statusChange)="onStatusChange($event)"
+            (editClick)="editClick.emit($event)" />
+        } @else {
+        <component-shared-empty title="No se encontraron categorías"
+            message="No hay categorías registradas en el sistema que coincidan con la búsqueda." />
+        }
+    </div>
+
+    <!-- Si hay más elementos que el tamaño de página, mostrar paginador -->
+    @if (totalElements > 0) {
+    <component-shared-paginator [page]="page" [totalPages]="totalPages" [totalElements]="totalElements"
+        (pageChange)="onPageChange($event)" />
+    }
+
+</section>

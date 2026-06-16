@@ -1,0 +1,32 @@
+<section class="lg:border border-gray-300 lg:rounded-xl lg:p-5 flex flex-col gap-7">
+
+    <div class="flex items-center justify-between gap-2">
+
+        <component-shared-search-box class="w-full md:max-w-sm" placeholder="Buscar usuarios por nombre" (searchQueryChange)="onSearch($event)" />
+
+        <div class="flex items-center gap-x-1">
+            <component-shared-import />
+            <component-shared-filters />
+        </div>
+
+    </div>
+
+    <div>
+        @if (loading) {
+            <p class="text-sm text-gray-500 text-center py-4">Cargando usuarios...</p>
+        } @else if (usersDetails.length > 0) {
+            <component-users-table [users]="usersDetails" />
+        } @else {
+            <component-shared-empty />
+        }
+    </div>
+
+    @if (page && page.totalPages > 1) {
+        <component-shared-paginator 
+            [page]="page.number" 
+            [totalPages]="page.totalPages" 
+            [totalElements]="page.totalElements"
+            (pageChange)="onPageChange($event)" />
+    }
+
+</section>

@@ -1,0 +1,113 @@
+<!-- Tabla de categorías -->
+<section class="overflow-x-hidden hover:overflow-x-auto">
+    <div class="min-w-full inline-block align-middle">
+        <div class="overflow-hidden">
+
+            <!-- Table content -->
+            <table class="min-w-full">
+                <thead>
+                    <tr class="bg-gray-100 text-sm">
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">
+                            Pedido
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">
+                            Tipo
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">
+                            Ubicación</th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">
+                            Estado</th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">
+                            Precio final</th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">
+                            Acciones
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <tr *ngFor="let order of orders" class="hover:bg-gray-50 transition-colors cursor-pointer"
+                        (click)="viewClick.emit(order)">
+                        <td class="px-6 py-3">
+                            <p class="text-sm font-medium text-nowrap">Pedido #{{ order.orderCode }}</p>
+                            <p class="text-sm text-gray-700 text-nowrap">{{ order.createdAt | date:'short' }}</p>
+                        </td>
+
+                        <td class="px-6 py-3">
+                            <div
+                                class="flex items-center gap-x-2 text-[13px] font-medium px-2 py-1.5 rounded-md bg-gray-100 w-fit">
+                                <!-- Si es que el tipo es Delivery -->
+                                <ng-container *ngIf="order.orderType === 'DELIVERY'">
+                                    <svg lucideShoppingBag class="size-3.5" />
+                                    <p class="text-nowrap">Delivery</p>
+                                </ng-container>
+
+                                <!-- Si es que el tipo es Recoger en Tienda -->
+                                <ng-container *ngIf="order.orderType === 'PICKUP'">
+                                    <svg lucideStore class="size-3.5" />
+                                    <p class="text-nowrap">Recoger en Local</p>
+                                </ng-container>
+
+                                <!-- Si es que el tipo es Mesa -->
+                                <ng-container *ngIf="order.orderType === 'DINE_IN'">
+                                    <svg lucideUtensilsCrossed class="size-3.5" />
+                                    <p class="text-nowrap">Presencial</p>
+                                </ng-container>
+                            </div>
+                        </td>
+
+                        <td class="px-6 py-3">
+                            <div
+                                class="flex items-center gap-x-2 text-[13px] font-medium px-2 py-1.5 rounded-md bg-gray-100 w-fit">
+                                <!-- Si es que el tipo es Delivery -->
+                                <ng-container *ngIf="order.orderType === 'DELIVERY'">
+                                    <svg lucideShoppingBag class="size-3.5" />
+                                    <p>A domicilio</p>
+                                </ng-container>
+
+                                <!-- Si es que el tipo es Recoger en Local -->
+                                <ng-container *ngIf="order.orderType === 'PICKUP'">
+                                    <svg lucideStore class="size-3.5" />
+                                    <p>Local Central</p>
+                                </ng-container>
+
+                                <!-- Si es que el tipo es Mesa -->
+                                <ng-container *ngIf="order.orderType === 'DINE_IN'">
+                                    <svg lucideUtensilsCrossed class="size-3.5" />
+                                    <p class="uppercase">Mesa {{ order.tableNumber ? order.tableNumber : 'N/A' }}</p>
+                                </ng-container>
+                            </div>
+                        </td>
+
+                        <td class="px-6 py-3">
+                            <component-shared-states [state]="mapStatus(order.status)" />
+                        </td>
+
+                        <td class="px-6 py-3 text-sm">S/. {{ order.totalAmount | number:'1.2-2' }}</td>
+
+                        <td class="px-6 py-3">
+                            <div class="flex items-center gap-x-1">
+                                <button (click)="$event.stopPropagation(); viewClick.emit(order)"
+                                    class="p-2 rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-black flex items-center justify-center"
+                                    title="Ver Detalles">
+                                    <svg lucideEye class="size-4" />
+                                </button>
+                                <button (click)="$event.stopPropagation(); editClick.emit(order)"
+                                    class="p-2 rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-black flex items-center justify-center"
+                                    title="Editar Pedido">
+                                    <svg lucideSquarePen class="size-4" />
+                                </button>
+                                <button (click)="$event.stopPropagation(); statusChange.emit(order)"
+                                    class="p-2 rounded-md text-red-500 bg-red-100 hover:bg-red-200 flex items-center justify-center"
+                                    title="Rechazar Pedido">
+                                    <svg lucideBadgeX class="size-4" />
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</section>
+<!-- FIN: Tabla de categorías -->

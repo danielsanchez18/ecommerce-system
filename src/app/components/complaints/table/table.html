@@ -1,0 +1,53 @@
+<div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Cliente
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Tipo
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Fecha
+                </th>
+                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Acciones
+                </th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            @for (complaint of complaints; track complaint.id) {
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div>
+                                <div class="text-sm font-medium text-gray-900">
+                                    {{ complaint.name }}
+                                </div>
+                                <div class="text-sm text-gray-500">
+                                    {{ complaint.email }}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                              [class.bg-red-100]="complaint.type === 'QUEJA'"
+                              [class.text-red-800]="complaint.type === 'QUEJA'"
+                              [class.bg-orange-100]="complaint.type === 'RECLAMO'"
+                              [class.text-orange-800]="complaint.type === 'RECLAMO'">
+                            {{ complaint.type }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {{ complaint.createdAt | date:'shortDate' }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <a [routerLink]="['/dashboard/reclamos', complaint.id]" class="text-blue-600 hover:text-blue-900">Ver detalles</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,121 @@
+<!-- Tabla de productos -->
+<section class="overflow-x-hidden hover:overflow-x-auto">
+    <div class="min-w-full inline-block align-middle">
+        <div class="overflow-hidden">
+
+            <!-- Table content -->
+            <table class="min-w-full">
+                <thead>
+                    <tr class="bg-gray-100 text-sm">
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">
+                            Productos
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">
+                            Estado
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">Precio
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">Stock
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">Pedidos
+                            sem.
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">
+                            Acciones
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @for (product of products; track product.id) {
+                    <tr routerLink="{{product.id}}" class="group hover:bg-gray-50 hover:cursor-pointer max-xl:w-full">
+                        <td class="px-6 py-3 whitespace-nowrap">
+                            <div class="grid grid-cols-[auto_1fr] gap-x-3 items-center">
+
+                                <div
+                                    class="min-w-12 max-w-12 h-12 bg-gray-100 text-gray-700 rounded-md object-cover flex items-center justify-center overflow-hidden border border-gray-200">
+                                    @if (product.imageUrl) {
+                                    <img [src]="product.imageUrl" [alt]="product.name"
+                                        class="w-full h-full object-cover" />
+                                    } @else {
+                                    <svg lucideTag class="size-4.5" />
+                                    }
+                                </div>
+
+                                <div class="flex flex-col">
+                                    <div class="flex items-center gap-x-2">
+                                        <p
+                                            class="text-sm capitalize font-medium group-hover:text-primary group-hover:underline">
+                                            {{ product.name }}</p>
+                                        @if (product.deleted) {
+                                        <svg lucideBadgeX class="size-4 text-red-600" />
+                                        } @else if (product.enabled) {
+                                        <svg lucideBadgeCheck class="size-4 text-green-600" />
+                                        } @else {
+                                        <svg lucideBadgeMinus class="size-4 text-gray-500" />
+                                        }
+                                    </div>
+                                    <p class="text-gray-700 text-xs">{{ categoriesMap[product.categoryId] || 'Sin categoría' }}</p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="px-6 py-3 whitespace-nowrap text-start">
+                            @if (product.deleted) {
+                            <component-shared-states [state]="'Eliminado'" />
+                            } @else if (!product.enabled) {
+                            <component-shared-states [state]="'Oculto'" />
+                            } @else if (product.inPromotion) {
+                            <component-shared-states [state]="'En Promocion'" />
+                            } @else if (product.inDiscount) {
+                            <component-shared-states [state]="'En Oferta'" />
+                            } @else {
+                            <component-shared-states [state]="'Activo'" />
+                            }
+                        </td>
+
+                        <td class="px-6 py-3 whitespace-nowrap text-start text-sm">
+                            {{ product.basePrice | currency:'S/. ' }}
+                        </td>
+                        <td class="px-6 py-3 whitespace-nowrap text-start text-sm">
+                            <label class="relative inline-flex items-center cursor-pointer select-none"
+                                (click)="$event.stopPropagation()">
+                                <input type="checkbox" [checked]="product.enabled" (change)="statusChange.emit(product)"
+                                    class="sr-only peer" />
+                                <div
+                                    class="w-12.5 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-[22px] peer-checked:after:border-white after:content-[''] after:absolute after:top-[3px] after:inset-s-[3px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5.5 after:w-5.5 after:transition-all peer-checked:bg-primary">
+                                </div>
+                            </label>
+                        </td>
+                        <td class="px-6 py-3 whitespace-nowrap text-start text-sm">
+                            --
+                        </td>
+                        <td class="px-6 py-3 whitespace-nowrap text-start text-sm">
+                            <div class="flex items-center gap-x-1">
+                                <button (click)="$event.stopPropagation(); viewClick.emit(product.id)"
+                                    class="p-2 rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-black flex items-center justify-center">
+                                    <svg lucideEye class="size-4" />
+                                </button>
+                                <button (click)="$event.stopPropagation(); editClick.emit(product)"
+                                    data-hs-overlay="#hs-edit-product-modal"
+                                    class="p-2 rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-black flex items-center justify-center">
+                                    <svg lucideClipboardPenLine class="size-4" />
+                                </button>
+                                <button (click)="$event.stopPropagation(); statusChange.emit(product)"
+                                    class="p-2 rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-black flex items-center justify-center">
+                                    @if (product.enabled) {
+                                    <svg lucideBadgeMinus class="size-4" />
+                                    } @else {
+                                    <svg lucideBadgeCheck class="size-4 text-green-600" />
+                                    }
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</section>
+<!-- FIN: Tabla de productos -->

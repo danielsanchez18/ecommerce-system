@@ -1,0 +1,29 @@
+<section class="lg:border border-gray-300 lg:rounded-xl lg:p-5 flex flex-col gap-7">
+
+    <div class="flex items-center justify-between gap-2">
+
+        <component-shared-search-box class="w-full md:max-w-sm" placeholder="Buscar cliente o comprobante..."
+            [searchQuery]="searchTerm" (searchQueryChange)="onSearchQueryChange($event)" />
+
+        <div class="flex items-center gap-x-1">
+            <component-shared-filters />
+        </div>
+
+    </div>
+
+    <div>
+        @if (filteredInvoices.length > 0) {
+        <component-billing-table [invoices]="filteredInvoices" (viewClick)="onViewInvoice($event)" />
+        } @else {
+        <component-shared-empty title="No se encontraron comprobantes"
+            message="No hay comprobantes de pago registrados en el sistema que coincidan con la búsqueda." />
+        }
+    </div>
+
+    @if (totalElements > 0) {
+    <component-shared-paginator [page]="page" [totalPages]="totalPages" [totalElements]="totalElements"
+        (pageChange)="onPageChange($event)" />
+    }
+
+    <component-billing-pdf [invoice]="selectedInvoice" [isOpen]="isPdfOpen" (close)="isPdfOpen = false" />
+</section>

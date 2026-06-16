@@ -1,0 +1,34 @@
+<main class="w-full px-4 md:px-7 xl:px-10 flex flex-col min-h-full gap-7">
+
+    <!-- Título -->
+    <div class="">
+        <a routerLink=".." class="text-primary text-sm hover:underline underline-offset-4 font-semibold">Regresar</a>
+        <p class="font-medium text-lg">Detalles de Promoción</p>
+    </div>
+
+
+    <div class="grid xl:grid-cols-[2fr_2fr] gap-5 h-full">
+
+        <!-- Layout de Imagenes -->
+        <component-promotions-details-images [products]="promotion.products" />
+
+        <!-- Información de la Promoción -->
+        <component-promotions-details-info [promotion]="promotion" />
+
+        <!-- Productos de la Promoción -->
+        <component-promotions-details-products [products]="promotion.products" />
+
+        <!-- Térmios y Detalles -->
+        <component-promotions-details-terms [terms]="promotion.terms" />
+
+    </div>
+
+    <div class="sticky bottom-0 z-50">
+        <div class="w-fit mx-auto">
+            <component-shared-toast [btnDelete]="true" [btnEdit]="true" [btnDisable]="promotion.enabled"
+                [btnEnable]="!promotion.enabled" (editClick)="onEditClick()" (deleteClick)="onDeleteClick()"
+                (disableClick)="onStatusClick()" (enableClick)="onStatusClick()" />
+        </div>
+    </div>
+
+</main>

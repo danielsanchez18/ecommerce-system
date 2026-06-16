@@ -1,0 +1,70 @@
+<main class="w-full px-4 md:px-7 xl:px-10 flex flex-col gap-7">
+
+    <div class="flex items-center justify-between">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <a routerLink="/dashboard/reclamos" class="text-sm text-gray-500 hover:text-blue-600 font-medium">Reclamos</a>
+                <span class="text-sm text-gray-400">/</span>
+                <span class="text-sm text-gray-700">Detalles</span>
+            </div>
+            <h1 class="text-lg font-medium">Detalle del Reclamo</h1>
+        </div>
+    </div>
+
+    @if (isLoading) {
+        <div class="flex justify-center py-10">
+            <div class="animate-spin inline-block w-6 h-6 border-[3px] border-current border-t-transparent text-blue-600 rounded-full" role="status" aria-label="loading"></div>
+        </div>
+    } @else if (error) {
+        <div class="p-4 bg-red-50 text-red-700 rounded-lg border border-red-200">
+            {{ error }}
+        </div>
+    } @else if (complaint) {
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
+            <!-- Info Card -->
+            <article class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                <h2 class="text-base font-semibold mb-4 text-gray-800 border-b pb-2">Información del Cliente</h2>
+                <div class="space-y-4">
+                    <div>
+                        <span class="block text-sm font-medium text-gray-500">ID del Registro</span>
+                        <span class="block text-sm text-gray-900 mt-1 font-mono bg-gray-50 px-2 py-1 rounded inline-block">{{ complaint.id }}</span>
+                    </div>
+                    <div>
+                        <span class="block text-sm font-medium text-gray-500">Nombre Completo</span>
+                        <span class="block text-sm text-gray-900 mt-1">{{ complaint.name }}</span>
+                    </div>
+                    <div>
+                        <span class="block text-sm font-medium text-gray-500">Correo Electrónico</span>
+                        <a [href]="'mailto:' + complaint.email" class="block text-sm text-blue-600 hover:underline mt-1">{{ complaint.email }}</a>
+                    </div>
+                    <div>
+                        <span class="block text-sm font-medium text-gray-500">Fecha de Registro</span>
+                        <span class="block text-sm text-gray-900 mt-1">{{ complaint.createdAt | date:'medium' }}</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Message Card -->
+            <article class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                <div class="flex items-center justify-between border-b pb-2 mb-4">
+                    <h2 class="text-base font-semibold text-gray-800">Detalle del Caso</h2>
+                    <span class="px-2 py-1 text-xs font-medium rounded-full"
+                          [class.bg-red-100]="complaint.type === 'QUEJA'"
+                          [class.text-red-800]="complaint.type === 'QUEJA'"
+                          [class.bg-orange-100]="complaint.type === 'RECLAMO'"
+                          [class.text-orange-800]="complaint.type === 'RECLAMO'">
+                        {{ complaint.type }}
+                    </span>
+                </div>
+                
+                <div>
+                    <span class="block text-sm font-medium text-gray-500 mb-2">Mensaje del Cliente</span>
+                    <div class="text-sm text-gray-800 bg-gray-50 p-4 rounded-lg border border-gray-100 whitespace-pre-wrap">
+                        {{ complaint.message }}
+                    </div>
+                </div>
+            </article>
+        </div>
+    }
+
+</main>

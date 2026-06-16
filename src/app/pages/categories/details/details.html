@@ -1,0 +1,34 @@
+<main class="w-full px-4 md:px-7 lg:px-10 flex flex-col gap-y-7 h-full relative">
+
+    <div>
+        <a routerLink=".."
+            class="text-sm text-primary font-medium hover:underline hover:text-primary-hover">Regresar</a>
+        <h1 class="text-lg font-medium">{{ category?.name || 'Cargando categoría...' }}</h1>
+    </div>
+
+    <div class="h-full">
+        <div class="grid md:grid-cols-[1fr_1fr] gap-5">
+            <component-categories-details-card [category]="category" [productCount]="totalProducts" />
+
+            <component-categories-details-products [products]="products" [page]="page" [totalPages]="totalPages"
+                [totalElements]="totalProducts" (pageChange)="onPageChange($event)" />
+        </div>
+    </div>
+
+    <div class="sticky bottom-0">
+        <div class="w-fit mx-auto">
+            <component-shared-toast [btnDelete]="true" [btnEdit]="true" [btnDisable]="category?.enabled === true"
+                [btnEnable]="category?.enabled === false" (deleteClick)="onDeleteClick()" (editClick)="onEditClick()"
+                (disableClick)="onStatusClick()" (enableClick)="onStatusClick()" />
+        </div>
+    </div>
+</main>
+
+<!-- Modal de editar categoría -->
+<div id="hs-edit-category-modal"
+    class="hs-overlay hidden size-full fixed top-0 inset-s-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
+    role="dialog" tabindex="-1" aria-labelledby="hs-edit-category-modal-label">
+    @if (category) {
+    <component-categories-edit [category]="category" (editSuccess)="loadCategory()" />
+    }
+</div>

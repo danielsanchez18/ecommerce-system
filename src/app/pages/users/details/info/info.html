@@ -1,0 +1,83 @@
+<section class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-[1fr_2fr] gap-5 h-full relative">
+
+    <!-- Información de registro -->
+    <article class="rounded-2xl border border-gray-300 bg-white overflow-hidden h-fit order-2 lg:order-1">
+        <div class="px-5 py-3 border-b border-gray-300">
+            <h2 class="text-sm font-medium">Información de registro</h2>
+        </div>
+
+        <div class="p-5 space-y-3 relative">
+            @if (loading) {
+                <div class="absolute inset-0 bg-white/80 z-10 flex justify-center items-center">
+                    <span class="text-sm text-gray-500">Cargando...</span>
+                </div>
+            }
+            <div class="flex items-center gap-x-2">
+                <svg lucideBadgeInfo class="size-4 text-gray-500"></svg>
+                <span class="text-sm text-gray-700">ID:</span>
+                <button (click)="copyId()"
+                    class="text-sm hover:underline text-primary hover:text-primary-dark font-semibold text-start truncate max-w-full relative group">
+                    {{ user?.id }}
+                    @if (copied) {
+                        <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded shadow">Copiado</span>
+                    }
+                </button>
+            </div>
+            <div class="flex items-center gap-x-2">
+                <svg lucideCalendar1 class="size-4 text-gray-500"></svg>
+                <span class="text-sm text-gray-700">Fecha de registro:</span>
+                <span class="text-sm font-medium">{{ user?.createdAt | date:'dd MMM yyyy - HH:mm' }}</span>
+            </div>
+            <div class="flex items-center gap-x-2">
+                <svg lucideCalendarCheck class="size-4 text-gray-500"></svg>
+                <span class="text-sm text-gray-700">Fecha de actualización:</span>
+                <span class="text-sm font-medium">{{ user?.updatedAt ? (user?.updatedAt | date:'dd MMM yyyy - HH:mm') : 'No actualizado' }}</span>
+            </div>
+        </div>
+    </article>
+
+
+    <!-- Información personal -->
+    <article class="rounded-2xl border border-gray-300 bg-white overflow-hidden order-1 lg:order-2">
+        <div class="px-5 py-3 border-b border-gray-300">
+            <h2 class="text-sm font-medium">Información Personal</h2>
+        </div>
+
+        <div class="p-5 space-y-3 relative">
+            @if (loading) {
+                <div class="absolute inset-0 bg-white/80 z-10 flex justify-center items-center">
+                    <span class="text-sm text-gray-500">Cargando...</span>
+                </div>
+            }
+            <div class="flex items-center gap-x-2">
+                <svg lucideUser class="size-4 text-gray-500"></svg>
+                <span class="w-16 text-sm text-gray-700">Nombre:</span>
+                <span class="text-sm font-medium">{{ user?.names }}</span>
+            </div>
+            <div class="flex items-center gap-x-2">
+                <svg lucideMail class="size-4 text-gray-500"></svg>
+                <span class="w-16 text-sm text-gray-700">Correo:</span>
+                <span class="text-sm font-medium">{{ user?.email }}</span>
+            </div>
+            <div class="flex items-center gap-x-2">
+                <svg lucidePhone class="size-4 text-gray-500"></svg>
+                <span class="w-16 text-sm text-gray-700">Teléfono:</span>
+                <span class="text-sm font-medium">{{ user?.phoneNumber || 'No registrado' }}</span>
+            </div>
+            <div class="flex items-center gap-x-2">
+                <svg lucideCircleCheck class="size-4 text-gray-500"></svg>
+                <span class="w-16 text-sm text-gray-700">Estado:</span>
+                <span class="text-sm font-medium" [class.text-green-600]="user?.enabled" [class.text-red-600]="!user?.enabled">
+                    {{ user?.enabled ? 'Activo' : 'Inactivo' }}
+                </span>
+            </div>
+            <div class="flex items-center gap-x-2">
+                <svg lucideClock class="size-4 text-gray-500"></svg>
+                <span class="text-sm text-gray-700">Última actividad:</span>
+                <span class="text-sm font-medium">No disponible</span>
+            </div>
+        </div>
+
+    </article>
+
+</section>

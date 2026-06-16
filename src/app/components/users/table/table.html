@@ -1,0 +1,93 @@
+<!-- Tabla de usuarios -->
+<section class="overflow-x-hidden hover:overflow-x-auto">
+    <div class="min-w-full inline-block align-middle">
+        <div class="overflow-hidden">
+
+            <!-- Table content -->
+            <table class="min-w-full">
+                <thead>
+                    <tr class="bg-gray-100 text-sm">
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">Usuario
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">Rol
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">
+                            Teléfono</th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">Fecha
+                            de registro</th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">
+                            Últ. actividad</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @for (detail of users; track detail.user.id) {
+                    <tr [routerLink]="['/dashboard/usuarios', detail.user.id]" class="group hover:bg-gray-50 hover:cursor-pointer max-xl:w-full">
+                        <td class="px-6 py-3 whitespace-nowrap">
+                            <div class="grid grid-cols-[auto_1fr] gap-x-3 items-center">
+
+                                <div
+                                    class="min-w-10 max-w-10 h-10 bg-gray-100 text-gray-700 rounded-full overflow-hidden flex items-center justify-center">
+                                    @if (detail.user.photoUrl) {
+                                        <img [src]="detail.user.photoUrl" [alt]="detail.user.names" class="w-full h-full object-cover">
+                                    } @else {
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5">
+                                            <path d="M0 0h24v24H0z" fill="none" />
+                                            <g fill="none" stroke="currentColor" stroke-width="1.5">
+                                                <circle cx="12" cy="6" r="4" />
+                                                <path
+                                                    d="M20 17.5c0 2.485 0 4.5-8 4.5s-8-2.015-8-4.5S7.582 13 12 13s8 2.015 8 4.5Z" />
+                                            </g>
+                                        </svg>
+                                    }
+                                </div>
+
+                                <div class="flex flex-col">
+                                    <div class="flex items-center gap-x-2">
+                                        <p
+                                            class="text-sm capitalize font-medium group-hover:text-primary group-hover:underline">
+                                            {{ detail.user.names }}
+                                        </p>
+                                        @if (detail.user.enabled) {
+                                            <svg lucideBadgeCheck class="size-4 text-green-600"></svg>
+                                        } @else {
+                                            <svg lucideBadgeMinus class="size-4 text-gray-500"></svg>
+                                        }
+                                    </div>
+                                    <p class="text-gray-700 text-xs">{{ detail.user.email }}</p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="px-6 py-3 whitespace-nowrap text-start">
+                            <div class="flex flex-col gap-1">
+                                @if (detail.roles.length > 0) {
+                                    @for (role of detail.roles; track role.id) {
+                                    <div class="px-2.5 py-1.5 rounded-md bg-gray-100 flex items-center justify-center gap-x-1 w-fit">
+                                        <svg lucideUserCog class="size-4 text-gray-700"></svg>
+                                        <p class="text-[13px]">{{ role.name }}</p>
+                                    </div>
+                                    }
+                                } @else {
+                                    <span class="text-xs text-gray-500">Sin roles</span>
+                                }
+                            </div>
+                        </td>
+
+                        <td class="px-6 py-3 whitespace-nowrap text-start text-sm">
+                            {{ detail.user.phoneNumber || 'No registrado' }}
+                        </td>
+                        <td class="px-6 py-3 whitespace-nowrap text-start text-sm">
+                            {{ detail.user.createdAt | date:'dd MMM yyyy' }}
+                        </td>
+                        <td class="px-6 py-3 whitespace-nowrap text-start text-sm">
+                            {{ detail.user.updatedAt ? (detail.user.updatedAt | date:'dd MMM yyyy') : 'No disponible' }}
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</section>
+<!-- FIN: Tabla de usuarios -->

@@ -1,0 +1,32 @@
+<main class="w-full px-4 md:px-7 xl:px-10 flex flex-col gap-7">
+
+    <div class="flex items-center gap-x-2">
+        <div>
+            <h1 class="text-lg font-medium">Descuentos (0)</h1>
+            <p class="text-sm text-gray-700">Panel de control de descuentos</p>
+        </div>
+
+        <button class="ml-auto text-sm btn-primary border-none!" aria-haspopup="dialog" aria-expanded="false"
+            aria-controls="hs-add-discount-modal" data-hs-overlay="#hs-add-discount-modal">
+            Agregar
+            <span class="maxsm:hidden"> descuento</span>
+        </button>
+    </div>
+
+    <component-discounts-list (editClick)="onEditDiscount($event)" />
+
+</main>
+
+<!-- Modal de agregar descuento -->
+<div id="hs-add-discount-modal"
+    class="hs-overlay hidden size-full fixed top-0 inset-s-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
+    role="dialog" tabindex="-1" aria-labelledby="hs-add-discount-modal-label">
+    <component-discounts-add />
+</div>
+
+<!-- Modal de editar descuento -->
+<div id="hs-edit-discount-modal"
+    class="hs-overlay hidden size-full fixed top-0 inset-s-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
+    role="dialog" tabindex="-1" aria-labelledby="hs-edit-discount-modal-label">
+    <component-discounts-edit [discount]="selectedDiscount" />
+</div>

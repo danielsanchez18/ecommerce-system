@@ -1,0 +1,86 @@
+<div
+    class="hs-overlay-animation-target hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95 opacity-0 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-56px)] flex items-center">
+    <div class="w-full flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl pointer-events-auto">
+
+        <!-- Título -->
+        <div class="flex justify-between items-center py-3 px-4 border-b border-gray-200">
+            <h3 id="hs-scale-animation-modal-label" class="font-medium">
+                Agregar producto
+            </h3>
+        </div>
+
+        <!-- Contenido -->
+        <div class="p-4 overflow-y-auto space-y-2">
+
+            <!-- Buscar -->
+            <div class="relative w-full">
+
+                <input type="text" placeholder="Buscar un producto para agregar" [(ngModel)]="searchTerm"
+                    (input)="onSearchChange()"
+                    class="px-4 pl-10 py-2 text-sm w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-primary focus:ring-2 bg-white">
+
+                <svg lucideSearch class="size-4 text-gray-500 absolute left-4 top-1/2 -translate-y-1/2" />
+            </div>
+
+            <!-- Resultados de búsqueda -->
+            <ul *ngIf="filteredProducts.length > 0 && searchTerm.trim() !== ''"
+                class="border contain-content p-1 border-gray-200 max-h-32 overflow-y-auto rounded-lg divide-y divide-transparent animate-fade-in">
+
+                <li *ngFor="let product of filteredProducts" (click)="selectProduct(product)"
+                    class="p-2 rounded-lg cursor-pointer text-sm hover:bg-gray-100 flex items-center gap-3">
+                    <img [src]="product.image" class="size-7 max-w-7 max-h-7 object-cover rounded-full" />
+                    <span>{{ product.name }}</span>
+                </li>
+
+            </ul>
+
+            <!-- Productos -->
+            <div class="min-h-32 mt-5">
+
+                <!-- Productos Vacios -->
+                <div *ngIf="selectedProducts.length === 0"
+                    class="text-gray-500 text-center flex flex-col h-32 text-sm justify-center space-y-2 items-center">
+                    <svg lucidePackageSearch class="size-8 stroke-[1.5] text-gray-500" />
+                    <p class="text-balance">Ingrese el nombre del producto que desee agregar</p>
+                </div>
+
+                <!-- Lista de productos seleccionados -->
+                <div *ngIf="selectedProducts.length > 0" class="space-y-1">
+
+                    <div *ngFor="let product of selectedProducts"
+                        [ngClass]="{ 'fade-leave': removingProductIds.includes(product.id) }"
+                        class="flex items-center justify-between bg-gray-100 p-2 rounded-lg transition-all duration-200">
+                        <div class="flex items-center gap-3">
+                            <img [src]="product.image" class="size-10 object-cover rounded-full" />
+                            <div>
+                                <p class="font-medium text-sm">{{ product.name }}</p>
+                                <p class="text-xs text-gray-500">{{ product.price | currency:'S/. ' }}</p>
+                            </div>
+                        </div>
+                        <button (click)="removeProduct(product.id)"
+                            class="text-red-500 font-medium text-xs">Remover</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-gray-200">
+
+            <button type="button"
+                class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+                data-hs-overlay="#modal-agregar-producto">
+                Cerrar
+            </button>
+
+            <button type="submit" (click)="addProducts()"
+                class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-primary text-white hover:bg-primary-dark focus:outline-hidden focus:bg-primary-dark disabled:opacity-50 disabled:pointer-events-none"
+                data-hs-overlay="#modal-agregar-producto">
+                Agregar
+            </button>
+        </div>
+
+    </div>
+</div>

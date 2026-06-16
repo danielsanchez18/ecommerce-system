@@ -1,0 +1,202 @@
+<section class="w-full bg-white rounded-xl border border-gray-300 h-full flex flex-col contain-content">
+
+    <!-- Título -->
+    <div class="px-4 py-3 border-b border-gray-300 grid grid-cols-[1fr_auto] items-center gap-x-3">
+
+        <h3 class="font-medium text-sm">Lista de Productos</h3>
+
+        <button type="button"
+            class="flex px-2 py-1.5 hover:bg-gray-50 items-center gap-x-2 rounded-lg border border-primary text-primary"
+            aria-haspopup="dialog" aria-expanded="false" aria-controls="modal-agregar-producto"
+            data-hs-overlay="#modal-agregar-producto">
+            <span class="text-[0.8rem] font-medium">Añadir producto</span>
+        </button>
+    </div>
+
+    <!-- Lista de Productos -->
+    <div class="px-4 h-full flex flex-col pb-5">
+
+        <div class="divide-gray-300 divide-y pt-3 pb-5 h-full overflow-y-auto">
+
+            @if (!orderCartService.cart()?.items || orderCartService.cart()!.items.length === 0) {
+            <div
+                class="flex flex-col items-center justify-center h-full gap-y-3 text-center text-gray-500 py-10 text-sm">
+                <svg lucidePackageSearch class="size-10 stroke-[1.5]" />
+                El carrito está vacío. Añade productos o promociones.
+            </div>
+            }
+
+            @for (item of orderCartService.cart()?.items; track item.id) {
+
+            @if (item.product) {
+            <div class="flex py-3 items-center gap-x-3 row-span-1 sm:row-span-2 md:row-span-1">
+
+                <!-- Imagen -->
+                <div
+                    class="min-h-16 min-w-16 max-w-16 max-h-16 bg-gray-200 border border-gray-300 rounded-lg contain-content">
+                    <img [src]="item.product.imageUrl" alt="" class="h-16 w-16 object-cover" />
+                </div>
+
+                <!-- Nombre / Disponibilidad / Precio -->
+                <div class="space-y-1 w-full">
+                    <div class="flex items-center gap-x-2">
+                        <!-- Nombre -->
+                        <a routerLink="/dashboard/productos/{{item.product.id}}"
+                            class="line-clamp-1 font-medium text-sm hover:underline underline-offset-4 hover:text-primary">
+                            {{ item.product.name }}
+                        </a>
+
+                        <!-- Disponibilidad -->
+                        @if (item.product.enabled) {
+                        <svg lucideBadgeCheck class="text-green-600 justify-self-center size-4 stroke-[1.5]" />
+                        }
+                        @else {
+                        <svg lucideBadgeMinus class="text-gray-700 justify-self-center size-4 stroke-[1.5]" />
+                        }
+
+                        <component-shared-states *ngIf="item.product.inDiscount" [state]="'En Oferta'"
+                            class="text-xs! leading-none!!" />
+                        <component-shared-states *ngIf="item.product.inPromotion" [state]="'En Promocion'"
+                            class="text-xs! leading-none!!" />
+                    </div>
+
+                    <div class="w-full flex items-center gap-x-2">
+                        <!-- Precio -->
+                        <div class="md:w-24 text-nowrap flex flex-col justify-center">
+                            @if (item.product.inDiscount && item.product.finalPrice) {
+                            <div class="flex items-center gap-x-2">
+                                <p class="text-gray-500 text-sm leading-tight">{{ item.product.finalPrice |
+                                    currency:'S/. ' }}</p>
+                            </div>
+                            } @else {
+                            <p class="text-gray-500 text-sm">{{ item.product.basePrice | currency:'S/. ' }}</p>
+                            }
+                        </div>
+
+                        <!-- Select Cantidad -->
+                        <div class="flex items-center gap-x-2">
+                            <button class="px-2 py-0.5 bg-gray-100 rounded text-sm hover:bg-gray-200"
+                                (click)="decrementQuantity(item)">-</button>
+                            <span class="text-sm w-4 text-center">{{ item.quantity }}</span>
+                            <button class="px-2 py-0.5 bg-gray-100 rounded text-sm hover:bg-gray-200"
+                                (click)="incrementQuantity(item)">+</button>
+                        </div>
+                        <!-- End Select Cantidad -->
+
+                        <!-- Eliminar -->
+                        <button type="button" class="ml-auto" (click)="removeItem(item)">
+                            <svg lucideTrash2 class="text-red-500 size-4" />
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+            }
+
+            @if (item.promotion) {
+            <section class="rounded-lg border border-amber-600 mt-5 contain-content mb-3">
+
+                <div
+                    class="grid grid-cols-[1fr_auto_auto] items-center border-b border-b-amber-600 gap-x-3 py-3 px-4 text-sm">
+                    <a routerLink="" class="hover:underline underline-offset-4 font-medium text-amber-600 ">
+                        {{ item.promotion.name }}
+                    </a>
+                    <p>{{ item.promotion.finalPrice| currency:'S/. ' }}</p>
+
+                    <div class="flex items-center gap-x-2">
+
+                        <button class="px-2 py-1 bg-amber-100 rounded text-xs hover:bg-amber-200"
+                            (click)="decrementQuantity(item)">-</button>
+
+                        {{ item.quantity }}
+
+                        <button class="px-2 py-1 bg-amber-100 rounded text-xs hover:bg-amber-200"
+                            (click)="incrementQuantity(item)">+</button>
+
+                        <!-- Eliminar -->
+                        <button type="button" (click)="removeItem(item)">
+                            <svg lucideTrash2 class="text-red-500 size-4" />
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="px-4 divide-y divide-gray-300 py-2" *ngIf="item.promotion.products">
+                    <div *ngFor="let p of item.promotion.products" class="py-2 flex items-center gap-x-3">
+                        <div class="flex items-center gap-x-2">
+                            <img [src]="p.productImageUrl || 'https://via.placeholder.com/150'"
+                                class="w-14 h-14 min-w-14 object-cover rounded-lg" />
+                            <div class="flex flex-col gap-y-1">
+                                <a routerLink="/dashboard/productos/{{ p.productId }}"
+                                    class="font-medium text-sm hover:underline hover:text-primary">({{ p.quantity *
+                                    item.quantity }})
+                                    {{ p.productName }}</a>
+                                <p class="text-sm text-gray-500 line-through">{{ p.originalPrice | currency:'S/. ' }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+            }
+
+            }
+
+        </div>
+
+        <!-- Precios -->
+        <div class="space-y-5">
+
+            <div class="border-y border-gray-300 py-4 space-y-2">
+
+                <!-- Costo por Productos -->
+                <div class="flex text-sm items-center justify-between gap-x-3">
+                    <p>Subtotal:</p>
+                    <p>{{ orderCartService.getSubtotal() | currency:'S/. ' }}</p>
+                </div>
+
+                <!-- Cupón de Descuento -->
+                <div class="flex text-sm items-center justify-between gap-x-3">
+                    <div class="flex items-center gap-x-2">
+                        <p>Cupón:</p>
+                        <div class="relative w-40">
+                            <input type="text" [ngClass]="{
+                                'border-gray-300 focus:outline-none focus:ring-[1.5px]': isCouponValid === null,
+                                'focus:ring-primary border-primary pr-10': isCouponValid === true,
+                                'border-red-500 ring-red-400 animate-shake': isCouponValid === false
+                            }" [value]="coupon"
+                                class="border rounded-md px-3 py-1 text-sm w-full transition-all duration-200"
+                                placeholder="COD DE CUPON" (input)="onCouponChange($event)" />
+                        </div>
+                    </div>
+                    <p class="text-primary">- {{ 0 | currency:'S/. ' }}</p>
+                </div>
+
+                <!-- Descuentos -->
+                <div class="flex text-sm items-center justify-between gap-x-3">
+                    <p>Descuento directo:</p>
+                    <input type="number" placeholder="0.00" [value]="orderCartService.manualDiscount()"
+                        (input)="onManualDiscountChange($event)"
+                        class="border border-gray-300 rounded-md text-end px-3 py-1 text-sm w-20 focus:outline-primary">
+                </div>
+
+            </div>
+
+            <!-- Precio Total -->
+            <div class="flex font-medium items-center justify-between gap-x-3">
+                <p>Precio Total:</p>
+                <p class="">{{ orderCartService.getTotal() | currency:'S/. ' }}</p>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+
+<div id="modal-agregar-producto"
+    class="hs-overlay hidden size-full fixed top-0 inset-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
+    role="dialog" tabindex="-1" aria-labelledby="hs-scale-animation-modal-label">
+    <component-restaurant-order-add-product />
+</div>

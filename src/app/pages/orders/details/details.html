@@ -1,0 +1,48 @@
+<main class="w-full px-4 md:px-7 lg:px-10 flex flex-col gap-y-7 relative">
+
+    <ng-container *ngIf="order && !isLoading">
+        <div>
+            <a routerLink=".."
+                class="text-sm text-primary font-medium hover:underline hover:text-primary-hover">Regresar</a>
+
+            <div class="flex items-center gap-x-3">
+                <h1 class="text-lg font-medium line-clamp-1">Pedido #{{ order.orderCode }}</h1>
+                <component-shared-states [state]="mapStatus(order.status)" />
+            </div>
+
+            <!-- Wait, backend OrderResponse doesn't have updatedAt so we can use createdAt or omit -->
+            <p class="text-sm text-gray-700">Registrado el {{ order.createdAt | date:'short' }}</p>
+        </div>
+
+        <!-- Contenido -->
+        <div class="grid xl:grid-cols-[1fr_auto] gap-5 h-full">
+
+            <!-- Lista de Productos -->
+            <div class="overflow-y-auto gap-5">
+                <component-orders-details-products [order]="order" />
+            </div>
+
+            <!-- Información del Pedido y Timeline -->
+            <div class="relative flex flex-col gap-5">
+                <component-orders-details-info [order]="order" />
+                <component-orders-details-timeline [orderId]="order.id" />
+            </div>
+
+        </div>
+
+        <div class="sticky bottom-0" *ngIf="order.status !== 'REJECTED' && order.status !== 'CANCELLED'">
+            <div class="w-fit mx-auto">
+                <component-shared-toast
+                    *ngIf="order.status === 'PENDING' || order.status === 'PREPARING' || order.status === 'READY'"
+                    [btnReject]="true" [btnEdit]="true" (rejectClick)="onRejectOrder()" (editClick)="onEditOrder()" />
+
+                <component-shared-toast *ngIf="order.status === 'COMPLETED'" [btnReceipt]="true"
+                    (receiptClick)="onPrintReceipt()" [btnInvoice]="!invoice" (invoiceClick)="onIssueInvoice()" />
+            </div>
+        </div>
+
+        <component-orders-receipt [order]="order" [isOpen]="isReceiptOpen" (close)="isReceiptOpen = false" />
+        <component-billing-issue-modal [isOpen]="isIssueModalOpen" [orderId]="order.id"
+            (close)="isIssueModalOpen = false" (generated)="onInvoiceGenerated()" />
+    </ng-container>
+</main>

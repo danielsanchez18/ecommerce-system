@@ -1,1 +1,103 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+@import "../node_modules/preline/variants.css";
+
+@source "../node_modules/preline/dist/*.js";
+
+@plugin "@tailwindcss/forms";
+
+@layer base {
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+}
+
+@custom-variant hover (&:hover);
+
+@theme {
+  --font-primary: "Inter", sans-serif;
+
+  --color-primary: #51965c;
+  --color-primary-hover: #417b4a;
+}
+
+:root {
+  @apply font-primary;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+/* Ocultar el scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
+
+.btn-primary {
+  @apply bg-primary hover:bg-primary-hover border border-primary hover:border-primary-hover hover:ring-primary transition-colors text-white font-medium py-2 px-3 rounded-lg;
+}
+
+.btn-primary-outline {
+  @apply bg-white hover:bg-gray-100 border border-primary hover:border-primary-hover hover:ring-primary transition-colors text-primary font-medium py-2 px-3 rounded-lg;
+}
+
+.btn-secondary {
+  @apply bg-white hover:bg-gray-100 border border-gray-200 hover:ring-gray-200 transition-colors text-black font-medium py-2 px-3 rounded-lg;
+}
+
+/* Ocultar flechas de los input de tipo number Para Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Ocultar flechas de los input de tipo number Para Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+input[type=number] {
+  @apply focus:outline-none focus:border-transparent focus:ring-2 focus:ring-primary;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+.animate-fade-out {
+  animation: fadeOut 0.15s ease-in forwards;
+}
+
+.fade-leave {
+  opacity: 0;
+  transform: translateX(8px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}

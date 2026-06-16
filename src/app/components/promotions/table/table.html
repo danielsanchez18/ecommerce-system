@@ -1,0 +1,76 @@
+<section class="divide-y divide-zinc-200">
+
+    @for (promotion of promotions; track $index) {
+
+    <div class="py-5">
+        <a routerLink="{{ promotion.id }}" class="group space-y-5">
+
+            <div class="grid grid-cols-[auto_1fr_auto] items-center gap-x-2 max-sm:gap-y-1">
+
+                @if (promotion.type === 'Percent') {
+                <svg lucideBadgePercent class="size-5 stroke-[1.5] text-green-700" />
+                }
+                @if (promotion.type === 'BOGO') {
+                <svg lucideGift class="size-5 stroke-[1.5] text-pink-700" />
+                }
+                @if (promotion.type === 'Combo') {
+                <svg lucideTag class="size-5 stroke-[1.5] text-orange-700" />
+                }
+
+                <!-- Nombre de la promoción -->
+                <p class="font-medium truncate underline-offset-4 group-hover:text-primary group-hover:underline">
+                    {{ promotion.name }}
+                </p>
+
+                <!-- Estado de la promoción -->
+                <component-shared-states [state]="getPromotionStatus(promotion)" />
+
+                <!-- Descripción de la promoción -->
+                <p class="text-gray-700 mt-2 text-sm col-span-3 truncate">{{ promotion.description }}</p>
+            </div>
+
+            <!-- Productos en promoción -->
+            <div class="flex items-center flex-wrap gap-2">
+
+                @for (product of promotion.products; track $index) {
+
+                <div class="grid grid-cols-[auto_1fr] p-2 pr-4 rounded-lg max-w-60 bg-gray-100 items-center gap-x-2">
+                    <div class="size-8 row-span-2 rounded-md contain-content bg-gray-300">
+                        <img src="{{ product.productImageUrl }}" alt="" class="h-full w-full rounded-md object-cover" />
+                    </div>
+                    <p class="text-xs font-medium truncate">{{ product.productName }}</p>
+                    <p class="text-xs text-gray-700">{{ product.originalPrice | currency:'S/. ':'symbol':'1.2-2':'en-US'
+                        }}</p>
+                </div>
+
+                }
+
+            </div>
+
+            <div class="grid grid-cols-[1fr_auto] items-center gap-x-2">
+
+                <!-- Fechas de la promoción -->
+                <div class="text-gray-700 text-sm grid grid-cols-[auto_1fr] gap-x-2">
+                    <p>Desde:</p>
+                    <p class="capitalize">{{ promotion.startDate | date:'EEE, d MMM yy' }}</p>
+                    <p class="text-gray-500">hasta</p>
+                    <p class="capitalize">{{ promotion.endDate | date:'EEE, d MMM yy' }}</p>
+                </div>
+
+                <!-- Precios -->
+                <div class="text-end">
+                    <p class="line-through text-sm text-gray-700 ">
+                        {{ promotion.originalPrice | currency:'S/. ':'symbol':'1.2-2':'en-US' }}
+                    </p>
+                    <p class="font-medium">
+                        {{ promotion.finalPrice | currency:'S/. ':'symbol':'1.2-2':'en-US' }}
+                    </p>
+                </div>
+            </div>
+
+        </a>
+    </div>
+
+    }
+
+</section>

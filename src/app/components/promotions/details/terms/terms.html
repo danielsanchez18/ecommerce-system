@@ -1,0 +1,27 @@
+<section class="w-full h-full bg-white border border-gray-300 rounded-xl flex flex-col">
+
+    <div class="py-3 px-5 border-b border-gray-300">
+        <h2 class="font-medium text-sm">Términos y condiciones</h2>
+    </div>
+
+    <div class="bg-white px-5 space-y-3 py-4 h-full">
+
+        <div>
+            @for (term of terms; track $index) {
+
+            <div class="flex gap-x-2 py-2">
+
+                <svg lucideBadgeCheck class="text-primary size-5" />
+
+                <p class="text-sm">{{ term }}</p>
+            </div>
+
+            } @empty {
+            <div class="py-6 text-center text-gray-500 text-sm">
+                Sin términos ni condiciones especiales.
+            </div>
+            }
+        </div>
+    </div>
+
+</section>

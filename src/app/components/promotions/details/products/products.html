@@ -1,0 +1,47 @@
+<section class="w-full h-full border border-gray-300 rounded-xl bg-white">
+
+    <div class="py-3 px-5 border-b border-gray-300">
+        <h2 class="font-medium text-sm">Productos Incluidos</h2>
+    </div>
+
+    <div class="space-y-1 divide-y divide-gray-300 px-5 py-3">
+
+        @for (product of products; track $index) {
+
+        <a routerLink="/dashboard/productos/{{ product.productId }}"
+            class="group grid grid-cols-[auto_1fr] gap-x-3 py-3">
+
+            <!-- Imagen -->
+            <div class="bg-gray-200 rounded-lg size-16 contain-content">
+                @if (product.productImageUrl) {
+                <img [src]="product.productImageUrl" alt="" class="h-full rounded-md object-cover" />
+                } @else {
+                <div class="h-full w-full flex items-center justify-center bg-gray-100 text-gray-400">
+                    <svg class="size-6 stroke-[1.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+                    </svg>
+                </div>
+                }
+            </div>
+
+            <!-- Información -->
+            <div class="text-sm space-y-0">
+                <p class="font-medium truncate underline-offset-4 group-hover:underline group-hover:text-primary">
+                    {{ product.productName }}
+                </p>
+                <p class="text-gray-700 text-xs line-clamp-1">{{ product.productDescription || 'Sin descripción' }}</p>
+                <p class="mt-1 font-medium">
+                    {{ product.originalPrice | currency:'S/. ':'symbol':'1.2-2':'en-US' }}
+                    <span class="text-sm text-gray-700 font-normal ml-2">x {{ product.quantity }} uds.</span>
+                </p>
+            </div>
+
+        </a>
+
+        }
+
+    </div>
+
+</section>

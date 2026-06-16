@@ -1,0 +1,157 @@
+<section class="w-full bg-white rounded-xl border border-gray-300 h-fit flex flex-col contain-content">
+
+    <!-- Título -->
+    <div class="px-4 py-3 border-b border-gray-300">
+        <h3 class="font-medium text-sm">Lista de Productos</h3>
+    </div>
+
+    <!-- Lista de Productos -->
+    <div class="px-4 h-full flex flex-col pb-5">
+
+        <div class="divide-gray-300 divide-y pt-3 pb-5 h-full">
+
+            <!-- Individual Products -->
+            <ng-container *ngFor="let item of productItems; let i = index">
+                <div class="flex py-3 items-center gap-x-3 row-span-1 sm:row-span-2 md:row-span-1">
+
+                    <!-- Imagen -->
+                    <div
+                        class="min-h-16 min-w-16 max-w-16 max-h-16 bg-gray-200 border border-gray-300 rounded-lg contain-content flex items-center justify-center">
+                        <img *ngIf="item.productImageUrl" [src]="item.productImageUrl" alt="{{ item.productName }}"
+                            class="h-16 w-full object-cover" />
+                        <span *ngIf="!item.productImageUrl" class="text-xs text-gray-500">Sin img</span>
+                    </div>
+
+                    <!-- Nombre / Disponibilidad / Precio / Descuento -->
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-x-2">
+                            <!-- Nombre -->
+                            <a routerLink="/dashboard/productos/{{item.productId}}"
+                                class="line-clamp-1 font-medium text-sm hover:underline underline-offset-4 hover:text-primary">
+                                ({{ item.quantity }}) {{ item.productName || 'Producto Eliminado' }}
+                            </a>
+
+                            <!-- Disponibilidad -->
+                            <ng-container *ngIf="item.productEnabled !== undefined">
+                                <svg *ngIf="item.productEnabled" lucideBadgeCheck
+                                    class="text-green-600 justify-self-center size-4 stroke-[1.5]" />
+                                <svg *ngIf="!item.productEnabled" lucideBadgeMinus
+                                    class="text-gray-700 justify-self-center size-4 stroke-[1.5]" />
+                            </ng-container>
+                        </div>
+
+                        <div class="flex items-center gap-x-2">
+                            <!-- Precio Base (Tachado si hay descuento) -->
+                            <p class="text-sm"
+                                [ngClass]="(item.discountAmount || 0) > 0 ? 'text-gray-500 line-through' : 'text-gray-700'">
+                                {{ (item.unitPrice + (item.discountAmount || 0)) | currency:'S/. ' }} c/u
+                            </p>
+
+                            <!-- Precio Final -->
+                            <p class="text-gray-900 text-sm font-medium" *ngIf="(item.discountAmount || 0) > 0">
+                                {{ item.unitPrice | currency:'S/. ' }}
+                            </p>
+
+                            <!-- Oferta / Promoción -->
+                            <component-shared-states *ngIf="item.discountId" state="En Oferta" />
+                        </div>
+                    </div>
+
+                </div>
+            </ng-container>
+
+            <!-- Promotions -->
+            <ng-container *ngFor="let item of promotionItems; let i = index">
+                <section class="rounded-lg border border-amber-600 mt-5 contain-content">
+
+                    <div
+                        class="flex items-center justify-between border-b border-b-amber-600 py-3 px-4 text-sm bg-amber-50">
+                        <a routerLink="/dashboard/promociones"
+                            class="hover:underline underline-offset-4 font-medium text-amber-600 ">
+                            ({{ item.quantity }}) {{ item.promotionName || 'Promoción Eliminada' }}
+                        </a>
+                        <p class="font-medium text-amber-700">{{ item.unitPrice | currency:'S/. ' }} c/u</p>
+                    </div>
+
+                    <!-- Los items internos de la promoción -->
+                    <div class="px-4 divide-y divide-gray-300 py-2">
+                        <ng-container *ngIf="item.promotionProducts && item.promotionProducts.length > 0">
+                            <div *ngFor="let pp of item.promotionProducts" class="py-2 flex items-center gap-x-3">
+                                <!-- Imagen del producto -->
+                                <div
+                                    class="min-h-14 min-w-14 max-w-14 max-h-14 bg-gray-200 border border-gray-300 rounded-lg contain-content flex items-center justify-center">
+                                    <img *ngIf="pp.productImageUrl" [src]="pp.productImageUrl"
+                                        alt="{{ pp.productName }}" class="h-14 object-cover" />
+                                    <span *ngIf="!pp.productImageUrl" class="text-[10px] text-gray-500">Sin img</span>
+                                </div>
+
+                                <!-- Detalles del producto -->
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-x-2">
+                                        <!-- Nombre -->
+                                        <a routerLink="/dashboard/productos/{{pp.productId}}"
+                                            class="line-clamp-1 font-medium text-sm hover:underline underline-offset-4 hover:text-primary">
+                                            ({{ pp.quantity }}) {{ pp.productName || 'Eliminado' }}
+                                        </a>
+
+                                        <!-- Disponibilidad -->
+                                        <ng-container *ngIf="pp.productEnabled !== undefined">
+                                            <svg *ngIf="pp.productEnabled" lucideBadgeCheck
+                                                class="text-green-600 justify-self-center size-4 stroke-[1.5]" />
+                                            <svg *ngIf="!pp.productEnabled" lucideBadgeMinus
+                                                class="text-gray-700 justify-self-center size-4 stroke-[1.5]" />
+                                        </ng-container>
+
+                                        <!-- Etiqueta de Promoción -->
+                                        <component-shared-states state="En Promoción" />
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <div *ngIf="!item.promotionProducts || item.promotionProducts.length === 0"
+                            class="py-3 text-sm text-gray-500">
+                            <p>Contenido del combo no detallado.</p>
+                        </div>
+                    </div>
+
+                </section>
+            </ng-container>
+
+        </div>
+
+        <!-- Precios -->
+        <div class="space-y-5">
+
+            <div class="border-y border-gray-300 py-4 space-y-1">
+
+                <!-- Costo por Productos -->
+                <div class="flex text-gray-700 text-sm items-center justify-between gap-x-3">
+                    <p>Subtotal de productos:</p>
+                    <p>{{ order.subtotal | currency:'S/. ' }}</p>
+                </div>
+
+                <!-- Costo por Entrega -->
+                <div class="flex text-gray-700 text-sm items-center justify-between gap-x-3">
+                    <p>Costo por entrega:</p>
+                    <p>{{ order.deliveryFee | currency:'S/. ' }}</p>
+                </div>
+
+                <!-- Descuento Manual -->
+                <div class="flex text-primary text-sm items-center justify-between gap-x-3"
+                    *ngIf="order.manualDiscount > 0">
+                    <p>Descuento manual:</p>
+                    <p>- {{ order.manualDiscount | currency:'S/. ' }}</p>
+                </div>
+
+            </div>
+
+            <!-- Precio Total -->
+            <div class="flex font-medium items-center justify-between gap-x-3">
+                <p>Precio Total:</p>
+                <p class="">{{ order.totalAmount | currency:'S/. ' }}</p>
+            </div>
+
+        </div>
+    </div>
+
+</section>

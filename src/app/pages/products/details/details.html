@@ -1,0 +1,33 @@
+<main class="w-full px-4 md:px-7 lg:px-10 flex flex-col gap-y-7 h-full relative">
+
+    <div>
+        <a routerLink=".."
+            class="text-sm text-primary font-medium hover:underline hover:text-primary-hover">Regresar</a>
+        <h1 class="text-lg font-medium">{{ product?.name || 'Cargando producto...' }}</h1>
+    </div>
+
+    <div class="h-full">
+        <div class="grid md:grid-cols-[2fr_1fr] gap-5">
+            <component-products-details-card [product]="product" [categoryName]="categoryName" />
+
+            <component-products-details-info [product]="product" />
+        </div>
+    </div>
+
+    <div class="sticky bottom-0">
+        <div class="w-fit mx-auto">
+            <component-shared-toast [btnDelete]="true" [btnEdit]="true" [btnDisable]="product?.enabled === true"
+                [btnEnable]="product?.enabled === false" (deleteClick)="onDeleteClick()" (editClick)="onEditClick()"
+                (disableClick)="onStatusClick()" (enableClick)="onStatusClick()" />
+        </div>
+    </div>
+</main>
+
+<!-- Modal de editar producto -->
+<div id="hs-edit-product-modal"
+    class="hs-overlay hidden size-full fixed top-0 inset-s-0 z-80 overflow-x-hidden overflow-y-auto pointer-events-none"
+    role="dialog" tabindex="-1" aria-labelledby="hs-edit-product-modal-label">
+    @if (product) {
+    <component-products-edit [product]="product" (editSuccess)="loadProduct()" />
+    }
+</div>

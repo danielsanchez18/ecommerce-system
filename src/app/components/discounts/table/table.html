@@ -1,0 +1,107 @@
+<!-- Tabla de descuentos -->
+<section class="overflow-x-hidden hover:overflow-x-auto">
+    <div class="min-w-full inline-block align-middle">
+        <div class="overflow-hidden">
+
+            <!-- Table content -->
+            <table class="min-w-full">
+                <thead>
+                    <tr class="bg-gray-100 text-sm">
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">
+                            Producto
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">
+                            Estado
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">
+                            Descuento
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">
+                            Precio final
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">
+                            Usos
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-nowrap text-xs uppercase font-semibold text-start">
+                            Acciones
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @for (discount of discounts; track discount.id) {
+                    <tr routerLink="{{ discount.id }}"
+                        class="group hover:bg-gray-50 hover:cursor-pointer max-xl:w-full">
+                        <td class="px-6 py-3 whitespace-nowrap">
+                            <div class="grid grid-cols-[auto_1fr] gap-x-3 items-center">
+
+                                <div
+                                    class="min-w-12 max-w-12 h-12 bg-gray-100 text-gray-700 rounded-md object-cover flex items-center justify-center overflow-hidden border border-gray-200">
+                                    @if (discount.productImageUrl) {
+                                    <img [src]="discount.productImageUrl" [alt]="discount.productName"
+                                        class="w-full h-full object-cover" />
+                                    } @else {
+                                    <svg lucideTag class="size-4.5" />
+                                    }
+                                </div>
+
+                                <div class="flex flex-col">
+                                    <div class="flex items-center gap-x-2">
+                                        <p
+                                            class="text-sm capitalize font-medium group-hover:text-primary group-hover:underline">
+                                            {{ discount.productName }}</p>
+                                    </div>
+                                    <p class="text-gray-700 text-xs">Original: {{ discount.originalPrice | currency:'S/.
+                                        ' }}</p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="px-6 py-3 whitespace-nowrap text-start">
+                            <component-shared-states [state]="getDiscountStatus(discount)" />
+                        </td>
+
+                        <td class="px-6 py-3 whitespace-nowrap text-start text-sm font-medium text-gray-800">
+                            @if (discount.discountType === 'descPorcentaje') {
+                            {{ discount.discountAmount }}%
+                            } @else {
+                            {{ discount.discountAmount | currency:'S/. ' }}
+                            }
+                        </td>
+                        <td class="font-semibold text-primary px-6 py-3 whitespace-nowrap text-start text-sm">
+                            {{ discount.finalPrice | currency:'S/. ' }}
+                        </td>
+                        <td class="px-6 py-3 whitespace-nowrap text-start text-sm text-gray-700">
+                            {{ discount.uses }} @if (discount.maxUses > 0) { de {{ discount.maxUses }} } @else { usos }
+                        </td>
+                        <td class="px-6 py-3 whitespace-nowrap text-start text-sm">
+                            <div class="flex items-center gap-x-1">
+                                <button [routerLink]="[discount.id]"
+                                    (click)="$event.stopPropagation(); viewClick.emit(discount.id)"
+                                    class="p-2 rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-black flex items-center justify-center">
+                                    <svg lucideEye class="size-4" />
+                                </button>
+                                <button (click)="$event.stopPropagation(); editClick.emit(discount)"
+                                    aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-edit-discount-modal" data-hs-overlay="#hs-edit-discount-modal"
+                                    class="p-2 rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-black flex items-center justify-center">
+                                    <svg lucideClipboardPenLine class="size-4" />
+                                </button>
+                                <button (click)="$event.stopPropagation(); statusChange.emit(discount)"
+                                    class="p-2 rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 hover:text-black flex items-center justify-center"
+                                    [title]="discount.enabled ? 'Suspender Descuento' : 'Habilitar Descuento'">
+                                    @if (discount.enabled) {
+                                    <svg lucideBadgeMinus class="size-4" />
+                                    } @else {
+                                    <svg lucideBadgeCheck class="size-4 text-green-600" />
+                                    }
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</section>
+<!-- FIN: Tabla de descuentos -->

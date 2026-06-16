@@ -1,0 +1,49 @@
+<div class="bg-white rounded-xl border border-gray-300 w-full xl:w-sm">
+
+    <div class="border-b border-gray-300 px-5 py-3">
+        <h3 class="text-sm font-medium">Historial del Pedido</h3>
+    </div>
+
+    <div *ngIf="isLoading" class="flex justify-center py-8">
+        <svg lucideRefreshCw class="size-6 text-gray-400 animate-spin" />
+    </div>
+
+    <div *ngIf="!isLoading && history.length === 0" class="text-center py-8 text-gray-500 text-sm">
+        No hay registros en el historial.
+    </div>
+
+    <div *ngIf="!isLoading && history.length > 0" class="relative px-5 py-1 divide-y divide-gray-300">
+
+        <div *ngFor="let item of history; let last = last" class="relative py-4">
+            <div class="flex gap-4">
+                <!-- Icon Indicator -->
+                <div class="relative z-10 flex justify-center mt-1 rounded-full bg-white ring-white" [ngClass]="{
+                        'text-green-500': item.action === 'CREADO',
+                        'text-blue-500': item.action === 'CAMBIO_ESTADO',
+                        'text-purple-500': item.action === 'ASIGNACION',
+                        'text-gray-500': item.action !== 'CREADO' && item.action !== 'CAMBIO_ESTADO' && item.action !== 'ASIGNACION'
+                        }">
+
+                    <svg *ngIf="item.action === 'CREADO'" lucideCheckCircle class="size-4" />
+                    <svg *ngIf="item.action === 'CAMBIO_ESTADO'" lucideRefreshCw class="size-4" />
+                    <svg *ngIf="item.action === 'ASIGNACION'" lucideUser class="size-4" />
+                    <svg *ngIf="item.action !== 'CREADO' && item.action !== 'CAMBIO_ESTADO' && item.action !== 'ASIGNACION'"
+                        lucideEdit class="size-4" />
+                </div>
+
+                <!-- Content -->
+                <div class="flex-1">
+                    <div class="flex flex-col gap-2">
+                        <p class="text-sm font-medium text-gray-900">{{ item.notes }}</p>
+                        <p class="text-sm text-gray-700">{{ item.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 text-sm text-gray-700 mt-1">
+                        <svg lucideUser class="size-3" />
+                        <span>{{ item.performedByName }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

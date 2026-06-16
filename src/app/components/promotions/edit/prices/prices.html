@@ -1,0 +1,65 @@
+<section class="w-full h-full border border-gray-300 rounded-xl bg-white">
+
+    <div class="px-4 py-3 border-b border-b-gray-300">
+        <h3 class="font-medium text-sm">Precios y Fechas</h3>
+    </div>
+
+
+    <div class="grid md:grid-cols-2 p-4 pb-5 gap-y-5 gap-x-5">
+
+        <!-- Precio Original -->
+        <div class="space-y-2">
+            <label for="originalPrice" class="block text-sm font-medium">Precio Original</label>
+            <input name="originalPrice" type="number" [value]="originalPrice" disabled
+                placeholder="Precio original"
+                class="border rounded-lg border-gray-300 text-gray-500 text-sm w-full py-2 px-4 focus:outline-none bg-gray-50">
+            <p class="text-xs text-gray-500">Precio total sin descuento.</p>
+        </div>
+
+        <!-- Precio Oferta -->
+        <div class="space-y-2">
+            <label for="finalPrice" class="block text-sm font-medium">Precio Oferta</label>
+            <input name="finalPrice" type="number" [(ngModel)]="promotion.finalPrice"
+                placeholder="Ingrese el precio de la oferta"
+                class="border rounded-lg border-gray-300 text-sm w-full py-2 px-4 focus:outline-none focus:ring-[1.5px] focus:ring-primary">
+            <p class="text-xs text-gray-500">Precio con descuento aplicado.</p>
+        </div>
+
+        <!-- Fecha de Inicio -->
+        <div class="space-y-2">
+            <label for="startDate" class="block text-sm font-medium">Fecha de Inicio</label>
+            <input name="startDate" type="datetime-local" [value]="promotion.startDate" disabled readonly
+                placeholder="Seleccione la fecha de inicio"
+                class="border rounded-lg border-gray-300 text-gray-500 text-sm w-full py-2 px-4 focus:outline-none bg-gray-50">
+            <p class="text-xs text-gray-500">Fecha desde la que se aplicará la promoción (no editable al editar).</p>
+        </div>
+
+        <!-- Fecha de Fin -->
+        <div class="space-y-2">
+            <label for="endDate" class="block text-sm font-medium">Fecha de Fin</label>
+            <input name="endDate" type="datetime-local" [(ngModel)]="promotion.endDate" placeholder="Seleccione la fecha de fin"
+                class="border rounded-lg border-gray-300 text-sm w-full py-2 px-4 focus:outline-none focus:ring-[1.5px] focus:ring-primary">
+            <p class="text-xs text-gray-500">Fecha hasta la que se aplicará la promoción.</p>
+        </div>
+
+        <!-- Usos Actuales -->
+        <div class="space-y-2">
+            <label for="currentUses" class="block text-sm font-medium">Usos Actuales</label>
+            <input name="currentUses" type="number" [value]="currentUses" disabled
+                placeholder="Usos actuales"
+                class="border rounded-lg border-gray-300 text-gray-500 text-sm w-full py-2 px-4 focus:outline-none bg-gray-50">
+            <p class="text-xs text-gray-500">Número de veces que se ha usado la promoción.</p>
+        </div>
+
+        <!-- Usos Máximos -->
+        <div class="space-y-2">
+            <label for="maxUses" class="block text-sm font-medium">Usos Máximos</label>
+            <input name="maxUses" type="number" [(ngModel)]="promotion.maxUses"
+                placeholder="Ingrese el número de usos máximos"
+                class="border rounded-lg border-gray-300 text-sm w-full py-2 px-4 focus:outline-none focus:ring-[1.5px] focus:ring-primary">
+            <p class="text-xs text-gray-500">Límite de veces que se puede usar la promoción (0 para ilimitado).</p>
+        </div>
+
+    </div>
+
+</section>

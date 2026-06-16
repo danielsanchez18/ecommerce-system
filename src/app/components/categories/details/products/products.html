@@ -1,0 +1,78 @@
+<div class="rounded-xl border border-gray-300 bg-white h-full p-5 space-y-5 flex flex-col justify-between">
+    <div class="space-y-5 flex flex-col h-full">
+        <h3 class="font-medium text-sm">Productos asociados</h3>
+
+        <div class="divide-y divide-gray-300 h-full">
+            @for (product of products; track product.id) {
+            <button
+                class="py-3 grid sm:grid-cols-[2.5fr_1fr] md:grid-cols-[3fr_1fr_1fr] w-full items-center gap-y-1 gap-x-4 group text-left">
+
+                <div class="flex items-center gap-x-3 row-span-1 sm:row-span-2 md:row-span-1">
+
+                    <!-- Imagen -->
+                    <div
+                        class="min-h-12 min-w-12 max-w-12 max-h-12 bg-gray-100 border border-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
+                        @if (product.imageUrl) {
+                        <img [src]="product.imageUrl" [alt]="product.name" class="w-full h-12 object-cover" />
+                        } @else {
+                        <svg lucideTag class="size-4.5 text-gray-500" />
+                        }
+                    </div>
+
+                    <!-- Nombre / Disponibilidad / Precio / Descuento -->
+                    <div class="space-y-1">
+
+                        <div class="flex items-center gap-x-2">
+                            <!-- Nombre -->
+                            <p class="line-clamp-1 font-medium text-sm group-hover:underline group-hover:text-primary">
+                                {{ product.name }}
+                            </p>
+
+                            <!-- Estado -->
+                            @if (product.deleted) {
+                            <svg lucideBadgeX class="size-4 text-red-600" />
+                            } @else if (product.enabled) {
+                            <svg lucideBadgeCheck class="size-4 text-green-600" />
+                            } @else {
+                            <svg lucideBadgeMinus class="size-4 text-gray-500" />
+                            }
+                        </div>
+
+                        <div class="flex items-center gap-x-2">
+                            <!-- Precio -->
+                            <p class="text-gray-700 text-sm">{{ product.basePrice | currency:'S/. ' }}</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Ventas / Pedidos -->
+                <div class="md:text-center text-sm flex items-center md:flex-col gap-x-2 gap-y-1 max-md:mt-2">
+                    <p class="text-gray-700 line-clamp-1">Ventas Sem.</p>
+                    <p class="font-medium text-nowrap">--</p>
+                </div>
+
+                <div
+                    class="text-center text-sm flex items-center md:flex-col sm:col-start-2 md:col-start-3 gap-x-2 gap-y-1">
+                    <p class="text-gray-700 line-clamp-1">Pedidos Sem.</p>
+                    <p class="font-medium text-nowrap">--</p>
+                </div>
+
+            </button>
+            } @empty {
+            <div class="py-12 flex flex-col items-center justify-center text-gray-500 text-sm gap-y-2">
+                <svg lucideTag class="size-8 text-gray-400" />
+                <p>No hay productos asociados a esta categoría.</p>
+            </div>
+            }
+        </div>
+
+        @if (products.length > 0) {
+        <div class="mt-auto">
+            <component-shared-paginator [page]="page" [totalPages]="totalPages" [totalElements]="totalElements"
+                (pageChange)="pageChange.emit($event)" />
+        </div>
+        }
+    </div>
+
+</div>

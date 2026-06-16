@@ -1,0 +1,65 @@
+<main class="w-full px-4 md:px-7 lg:px-10 flex flex-col gap-2">
+
+    <div class="mb-3">
+        <a routerLink=".."
+            class="text-sm text-primary font-medium hover:underline hover:text-primary-hover">Regresar</a>
+        <h1 class="text-lg font-medium">Detalles del Cliente</h1>
+    </div>
+
+    <article class="p-4 rounded-2xl space-y-2 border border-gray-300 bg-white">
+        <div class="relative h-50">
+            <div class="absolute inset-0 w-full rounded-xl h-40 bg-black/10 overflow-hidden">
+                <img src="/images/Background.svg" alt="background" class="w-full h-full object-cover">
+            </div>
+            <div class="absolute top-15 w-full">
+                <div
+                    class="min-w-35 max-w-35 h-35 text-6xl border-4 border-white bg-gray-100 mx-auto text-gray-500 font-semibold rounded-full overflow-hidden flex items-center justify-center">
+                    @if (user?.photoUrl) {
+                        <img [src]="user?.photoUrl" [alt]="user?.names" class="w-full h-full object-cover">
+                    } @else {
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                            <path d="M0 0h24v24H0z" fill="none" />
+                            <g fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="6" r="4" />
+                                <path d="M20 17.5c0 2.485 0 4.5-8 4.5s-8-2.015-8-4.5S7.582 13 12 13s8 2.015 8 4.5Z" />
+                            </g>
+                        </svg>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-3 mb-7">
+            <h2 class="text-lg font-medium">
+                @if (loading && !user) { Cargando... } @else { {{ user?.names }} }
+            </h2>
+            <p class="text-sm text-gray-700">{{ user?.email }}</p>
+        </div>
+
+        <div class="flex items-center gap-x-1 overflow-x-auto">
+            <a [routerLink]="['/dashboard/usuarios', userId]" routerLinkActive="bg-gray-100 text-black! font-medium"
+                [routerLinkActiveOptions]="{ exact: true }"
+                class="flex items-center gap-x-1.5 text-sm px-2.5 py-2 rounded-lg hover:bg-gray-100 whitespace-nowrap">
+                <svg lucideUser class="size-3.5"></svg>
+                Información General
+            </a>
+            <a routerLink="seguridad" routerLinkActive="bg-gray-100 text-black! font-medium"
+                class="flex items-center gap-x-1.5 text-sm px-2.5 py-2 text-gray-800 hover:text-black rounded-lg hover:bg-gray-100 whitespace-nowrap">
+                <svg lucideLock class="size-3.5"></svg>
+                Seguridad
+            </a>
+            <a routerLink="pedidos" routerLinkActive="bg-gray-100 text-black! font-medium"
+                class="flex items-center gap-x-1.5 text-sm px-2.5 py-2 text-gray-800 hover:text-black rounded-lg hover:bg-gray-100 whitespace-nowrap">
+                <svg lucideShoppingBag class="size-3.5"></svg>
+                Pedidos
+            </a>
+            <a [href]="'mailto:' + user?.email" class="ml-auto text-sm btn-secondary flex items-center gap-x-2">
+                <svg lucideMail class="size-3.5"></svg>
+                Enviar correo
+            </a>
+        </div>
+    </article>
+
+    <router-outlet />
+
+</main>

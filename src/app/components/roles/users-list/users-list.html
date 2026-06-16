@@ -1,0 +1,61 @@
+<section class="lg:border border-gray-300 lg:rounded-xl lg:p-5 flex flex-col gap-5">
+
+    <component-shared-search-box class="w-full" placeholder="Buscar usuarios asignados" />
+
+    <div>
+        @if (loading) {
+        <p class="text-sm text-gray-500 text-center py-4">Cargando usuarios...</p>
+        } @else if (userRolesWithDetails.length > 0) {
+        <div class="divide-y divide-gray-300">
+            @for (detail of userRolesWithDetails; track detail.userRole.id) {
+            <div class="py-4 flex items-center gap-x-3 w-full text-start">
+
+                <div
+                    class="flex items-center justify-center bg-gray-100 size-10 rounded-full overflow-hidden text-gray-700 shrink-0">
+                    @if (detail.user.photoUrl) {
+                    <img [src]="detail.user.photoUrl" [alt]="detail.user.names" class="w-full h-full object-cover">
+                    } @else {
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-5">
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <g fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="6" r="4" />
+                            <path d="M20 17.5c0 2.485 0 4.5-8 4.5s-8-2.015-8-4.5S7.582 13 12 13s8 2.015 8 4.5Z" />
+                        </g>
+                    </svg>
+                    }
+                </div>
+
+                <div>
+                    <div class="flex items-center gap-x-2">
+                        <p class="font-medium text-sm">{{ detail.user.names }}</p>
+                        @if (detail.user.enabled) {
+                            <svg lucideBadgeCheck class="size-4 text-green-600"></svg>
+                        }
+                    </div>
+                    <p class="text-sm text-gray-500">{{ detail.user.email }}</p>
+                </div>
+
+                <button
+                    class="ml-auto flex items-center hover:text-red-500 text-[13px] font-medium bg-gray-100 hover:bg-red-50 rounded-lg px-3 py-1.5 transition">Quitar</button>
+            </div>
+            }
+        </div>
+        } @else {
+        <component-shared-empty />
+        }
+    </div>
+
+    @if (page && page.totalPages > 1) {
+    <div class="flex justify-between items-center mt-4">
+        <span class="text-sm text-gray-500">
+            Página {{ page.number + 1 }} de {{ page.totalPages }}
+        </span>
+        <div class="flex gap-2">
+            <button [disabled]="page.first" (click)="onPageChange(page.number - 1)"
+                class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-50">Anterior</button>
+            <button [disabled]="page.last" (click)="onPageChange(page.number + 1)"
+                class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-50">Siguiente</button>
+        </div>
+    </div>
+    }
+</section>
