@@ -5,8 +5,8 @@
         <p class="text-sm text-gray-700">Aquí tienes un resumen de tu actividad reciente.</p>
     </div>
 
-    <!-- Si los componentes ya existen, podemos descomentarlos. Por ahora los dejo como estaban -->
-    <!-- <component-overview-kpis /> -->
-    <!-- <component-overview-table /> -->
+    <component-overview-kpis [kpis]="kpis()" />
+    <component-overview-charts />
+    <component-overview-table />
 
 </main>

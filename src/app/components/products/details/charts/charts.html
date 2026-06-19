@@ -1,0 +1,82 @@
+<section class="w-full bg-white rounded-xl border border-gray-300 contain-content">
+
+    <!-- Header -->
+    <div class="grid grid-cols-[1fr_auto] gap-x-3 items-center justify-between px-5 py-3.5 border-b border-b-gray-300">
+
+        <!-- Titulo -->
+        <h3 class="font-medium">
+            {{ selectedCategory.name }}
+        </h3>
+
+        <!-- Calendario -->
+        <button
+            class="text-xs flex items-center gap-x-1 font-medium p-2 border border-gray-300 rounded-lg hover:bg-gray-100">
+            <span>25 Jul - 25 Ago</span>
+            <svg lucideChevronDown class="size-4 stroke-[1.5]"></svg>
+        </button>
+    </div>
+
+    <!-- Contenido -->
+    <div class="grid xl:grid-cols-[1fr_auto] lg:min-h-88">
+
+        <!-- Chart -->
+        <div class="w-full min-h-80 -ml-1 sm:ml-1 pt-2 sm:pt-4 sm:pr-4 ">
+            <div id="hs-product-bar-chart"></div>
+        </div>
+
+        <!-- Resumen -->
+        <div
+            class="xl:w-sm px-5 pt-3 pb-5 space-y-5 max-xl:border-t max-xl:border-t-gray-300 xl:border-l xl:border-l-gray-300">
+
+            <!-- Header -->
+            <div class="border-b border-b-gray-300 flex gap-x-5">
+
+                @for (category of categories; track $index) {
+                <button type="button" (click)="selectCategory(category.name)" class="border-b-2 px-0 py-2 text-sm"
+                    [ngClass]="{
+              'border-b-primary': category.isActive,
+              'border-b-transparent': !category.isActive
+            }">
+                    {{ category.name }}
+                </button>
+                }
+            </div>
+
+            <!-- Content -->
+            <div class="space-y-3">
+
+                @if (selectedCategory.name == "Pedidos") {
+                <h3 class="text-2xl font-semibold">{{ quantityDisplay }}</h3>
+                }
+                @if (selectedCategory.name == "Ventas") {
+                <h3 class="text-2xl font-semibold">{{ quantityDisplay | currency:'S/. ' }}</h3>
+                }
+
+                <!-- Ranger Slide -->
+                <div class="w-full bg-gray-300 relative rounded-full py-1">
+                    <div class="bg-primary absolute py-1 rounded-l-full top-0 transition-all duration-300 ease-out"
+                        [style.width.%]="progressPercentage">
+                    </div>
+                    <div class="py-2 rounded-full bg-primary w-[10px] border-2 border-white absolute top-[-5px] transition-all duration-300 ease-out"
+                        [style.left.%]="progressPercentage">
+                    </div>
+                </div>
+
+                <div class="text-xs flex items-center justify-between">
+                    @if( selectedCategory.name == "Pedidos") {
+                    <p>{{ selectedCategory.minRange }}</p>
+                    <p>{{ selectedCategory.maxRange }}</p>
+                    }
+                    @if( selectedCategory.name == "Ventas") {
+                    <p>{{ selectedCategory.minRange | currency:'S/. ' }}</p>
+                    <p>{{ selectedCategory.maxRange | currency:'S/. ' }}</p>
+                    }
+                </div>
+
+                <p class="text-xs text-gray-500">Un desglose de información detalla de {{
+                    selectedCategory.name.toLowerCase() }} realizados.</p>
+            </div>
+        </div>
+    </div>
+
+</section>

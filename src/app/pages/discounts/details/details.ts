@@ -3,13 +3,14 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ComponentDiscountsDetailsInfo } from "@components/discounts/details/info/info";
 import { ComponentSharedToast } from "@components/shared/toast/toast";
 import { ComponentDiscountsEdit } from "@components/discounts/edit/edit";
+import { ComponentDiscountsCharts } from "@components/discounts/details/charts/charts";
 import { DiscountService } from '@core/service/discounts/discount.service';
 import { DiscountResponse } from '@core/interfaces/discounts/discount.interface';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'page-discounts-details',
-  imports: [RouterModule, ComponentDiscountsDetailsInfo, ComponentSharedToast, ComponentDiscountsEdit],
+  imports: [RouterModule, ComponentDiscountsDetailsInfo, ComponentSharedToast, ComponentDiscountsEdit, ComponentDiscountsCharts],
   templateUrl: './details.html',
 })
 export class PageDiscountsDetails implements OnInit {

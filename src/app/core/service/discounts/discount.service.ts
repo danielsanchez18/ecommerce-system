@@ -10,6 +10,8 @@ import {
 } from '@core/interfaces/discounts/discount.interface';
 import { API_URL } from '@core/utils/api';
 
+import { DashboardChartResponse } from '@core/interfaces/dashboard/dashboard.interface';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -48,5 +50,9 @@ export class DiscountService {
 
   delete(id: string): Observable<ApiResponse<void>> {
     return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`);
+  }
+
+  getDiscountCharts(discountId: string): Observable<ApiResponse<DashboardChartResponse>> {
+    return this.http.get<ApiResponse<DashboardChartResponse>>(`${this.apiUrl}/${discountId}/charts`);
   }
 }

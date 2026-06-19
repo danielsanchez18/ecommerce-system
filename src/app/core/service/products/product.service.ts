@@ -10,6 +10,8 @@ import {
 } from '@core/interfaces/products/product.interface';
 import { API_URL } from '@core/utils/api';
 
+import { DashboardChartResponse } from '@core/interfaces/dashboard/dashboard.interface';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -85,5 +87,12 @@ export class ProductService {
    */
   delete(id: string): Observable<ApiResponse<void>> {
     return this.http.put<ApiResponse<void>>(`${this.apiUrl}/delete/${id}`, null);
+  }
+
+  /**
+   * Retrieves the chart data for a specific product.
+   */
+  getProductCharts(productId: string): Observable<ApiResponse<DashboardChartResponse>> {
+    return this.http.get<ApiResponse<DashboardChartResponse>>(`${this.apiUrl}/${productId}/charts`);
   }
 }

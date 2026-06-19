@@ -10,6 +10,8 @@ import {
 } from '@core/interfaces/categories/category.interface';
 import { API_URL } from '@core/utils/api';
 
+import { DashboardChartResponse } from '@core/interfaces/dashboard/dashboard.interface';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -84,5 +86,12 @@ export class CategoryService {
    */
   delete(id: string): Observable<ApiResponse<void>> {
     return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`);
+  }
+
+  /**
+   * Retrieves the chart data for a specific category.
+   */
+  getCategoryCharts(categoryId: string): Observable<ApiResponse<DashboardChartResponse>> {
+    return this.http.get<ApiResponse<DashboardChartResponse>>(`${this.apiUrl}/${categoryId}/charts`);
   }
 }

@@ -1,1 +1,55 @@
-<p>kpis works!</p>,
+<section class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
+
+    <article class="w-full bg-white py-5 space-y-2 px-5 rounded-xl border border-gray-300">
+        <div class="flex text-sm text-gray-600 items-center justify-between">
+            <h3>Total de usuarios</h3>
+            <svg lucideUsers class="size-5 stroke-[1.5]" />
+        </div>
+
+        <div class="space-y-1">
+            <p class="font-medium text-xl">{{ kpis()?.totalUsers || 0 }} <span class="text-sm mr-2">usuarios</span> <span
+                    class="text-sm text-green-600">+{{ kpis()?.usersGrowthPercentage || 0 }}% esta semana</span></p>
+            <p class="text-xs text-gray-500">{{ kpis()?.newUsersThisWeek || 0 }} nuevos esta semana</p>
+        </div>
+    </article>
+
+    <article class="w-full bg-white py-5 space-y-2 px-5 rounded-xl border border-gray-300">
+        <div class="flex text-sm text-gray-600 items-center justify-between">
+            <h3>Ventas del día</h3>
+            <svg lucideStore class="size-5 stroke-[1.5]" />
+        </div>
+
+        <div class="space-y-1">
+            <p class="font-medium text-xl line-clamp-1">S/. {{ kpis()?.dailySales | number:'1.2-2' }} <span class="text-sm text-green-600">+{{ kpis()?.salesGrowthPercentage || 0 }}%
+                    ayer</span></p>
+            <p class="text-xs text-gray-500">{{ kpis()?.onlineSales || 0 }} online / {{ kpis()?.storeSales || 0 }} en tienda</p>
+        </div>
+    </article>
+
+
+    <article class="w-full bg-white py-5 space-y-2 px-5 rounded-xl border border-gray-300">
+        <div class="flex text-sm text-gray-600 items-center justify-between">
+            <h3>Usuarios en línea</h3>
+            <svg lucideUsersRound class="size-5 stroke-[1.5]" />
+        </div>
+
+        <div class="space-y-1">
+            <p class="font-medium text-xl">{{ kpis()?.onlineUsers || 0 }}<span class="text-sm"> / {{ kpis()?.totalActiveUsers || 0 }} usuarios</span></p>
+            <p class="text-xs text-gray-500 line-clamp-1">Último registrado: {{ kpis()?.lastRegisteredUser || 'N/A' }}</p>
+        </div>
+    </article>
+
+    <article class="w-full bg-white py-5 space-y-2 px-5 rounded-xl border border-gray-300">
+        <div class="flex text-sm text-gray-600 items-center justify-between">
+            <h3>Reclamos de hoy</h3>
+            <svg lucideTriangleAlert class="size-5 stroke-[1.5]" />
+        </div>
+
+        <div class="space-y-1">
+            <p class="font-medium text-xl">{{ kpis()?.todayComplaints || 0 }} <span class="text-sm">reclamos</span></p>
+            <p class="text-xs text-gray-500">{{ kpis()?.weeklyComplaints || 0 }} Esta Semana</p>
+        </div>
+    </article>
+
+
+</section>

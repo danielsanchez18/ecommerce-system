@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ComponentCategoriesDetailsCard } from '@components/categories/details/card/card';
 import { ComponentCategoriesDetailsProducts } from '@components/categories/details/products/products';
 import { ComponentSharedToast } from '@components/shared/toast/toast';
+import { ComponentCategoriesCharts } from '@components/categories/details/charts/charts';
 import { ComponentCategoriesEdit } from '@components/categories/edit/edit';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CategoryService } from '@core/service/categories/category.service';
@@ -19,6 +20,7 @@ import { CommonModule } from '@angular/common';
     ComponentCategoriesDetailsCard,
     ComponentCategoriesDetailsProducts,
     ComponentSharedToast,
+    ComponentCategoriesCharts,
     ComponentCategoriesEdit,
   ],
   templateUrl: './details.html',

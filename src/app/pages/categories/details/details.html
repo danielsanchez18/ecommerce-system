@@ -1,4 +1,4 @@
-<main class="w-full px-4 md:px-7 lg:px-10 flex flex-col gap-y-7 h-full relative">
+<main class="w-full px-4 md:px-7 lg:px-10 flex flex-col gap-y-7 relative">
 
     <div>
         <a routerLink=".."
@@ -12,6 +12,8 @@
 
             <component-categories-details-products [products]="products" [page]="page" [totalPages]="totalPages"
                 [totalElements]="totalProducts" (pageChange)="onPageChange($event)" />
+
+            <component-categories-charts [categoryId]="categoryId" class="md:col-span-2" />
         </div>
     </div>
 

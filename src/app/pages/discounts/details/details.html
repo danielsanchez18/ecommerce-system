@@ -7,7 +7,13 @@
     </div>
 
     <div class="h-full">
-        <component-discounts-details-info [discount]="discount" />
+        <div class="grid gap-5">
+            <component-discounts-details-info [discount]="discount" />
+
+            @if(discount) {
+            <component-discounts-charts [discountId]="discount.id" />
+            }
+        </div>
     </div>
 
     <div class="sticky bottom-0">

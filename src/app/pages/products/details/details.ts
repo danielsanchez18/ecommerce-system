@@ -3,6 +3,7 @@ import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { ComponentSharedToast } from '@components/shared/toast/toast';
 import { ComponentProductsDetailsCard } from '@components/products/details/card/card';
 import { ComponentProductsDetailsInfo } from '@components/products/details/info/info';
+import { ComponentProductsCharts } from '@components/products/details/charts/charts';
 import { ComponentProductsEdit } from '@components/products/edit/edit';
 import { ProductService } from '@core/service/products/product.service';
 import { CategoryService } from '@core/service/categories/category.service';
@@ -18,6 +19,7 @@ import Swal from 'sweetalert2';
     ComponentSharedToast,
     ComponentProductsDetailsCard,
     ComponentProductsDetailsInfo,
+    ComponentProductsCharts,
     ComponentProductsEdit
   ],
   templateUrl: './details.html',

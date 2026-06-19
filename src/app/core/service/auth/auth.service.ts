@@ -5,11 +5,15 @@ import { tap } from 'rxjs/operators';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
-import { AuthRequest, AuthResponse, CurrentUserResponse } from '@core/interfaces/auth/auth.interface';
+import {
+  AuthRequest,
+  AuthResponse,
+  CurrentUserResponse,
+} from '@core/interfaces/auth/auth.interface';
 import { API_URL } from '@core/utils/api';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private readonly http = inject(HttpClient);
@@ -24,15 +28,15 @@ export class AuthService {
 
   constructor() {
     // Escuchar los eventos de finalización de navegación para construir el historial
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-      this.history.push(event.urlAfterRedirects);
-      // Mantener solo los últimos 10 elementos en el historial
-      if (this.history.length > 10) {
-        this.history.shift();
-      }
-    });
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        this.history.push(event.urlAfterRedirects);
+        // Mantener solo los últimos 10 elementos en el historial
+        if (this.history.length > 10) {
+          this.history.shift();
+        }
+      });
 
     // Cargar el usuario actual si el token existe al iniciar la aplicación
     if (this.isAuthenticated()) {
@@ -53,7 +57,7 @@ export class AuthService {
       tap(() => {
         // Cargar inmediatamente la información del usuario tras iniciar sesión con éxito
         this.loadCurrentUser().subscribe();
-      })
+      }),
     );
   }
 
@@ -61,11 +65,13 @@ export class AuthService {
    * Carga la información detallada del usuario logueado actualmente.
    */
   loadCurrentUser(): Observable<CurrentUserResponse> {
-    return this.http.get<CurrentUserResponse>(`${this.apiUrl}/current-user`).pipe(
-      tap((user) => {
-        this.currentUser.set(user);
-      })
-    );
+    return this.http
+      .get<CurrentUserResponse>(`${this.apiUrl}/current-user`)
+      .pipe(
+        tap((user) => {
+          this.currentUser.set(user);
+        }),
+      );
   }
 
   /**
@@ -100,12 +106,12 @@ export class AuthService {
    */
   getPreviousUrl(): string {
     const authPaths = ['/auth/ingresar', '/auth/registrarse'];
-    
+
     // Recorrer el historial de atrás hacia adelante empezando antes del actual
     for (let i = this.history.length - 2; i >= 0; i--) {
       const url = this.history[i];
-      const isAuthPath = authPaths.some(path => url.startsWith(path));
-      
+      const isAuthPath = authPaths.some((path) => url.startsWith(path));
+
       if (!isAuthPath) {
         // Retornar el path si es un path libre (landing o menú)
         const isFreePath = url === '/' || url.startsWith('/menu');
@@ -114,7 +120,7 @@ export class AuthService {
         }
       }
     }
-    
+
     return '/';
   }
 }
